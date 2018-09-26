@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package MiscProjects;
+package gitproject;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -38,6 +38,17 @@ public class Bubbles  extends JPanel implements KeyListener {
     {
         this.setBackground(Color.white);
         this.setSize(w, h);
+        
+        // single ball
+        balls.add(new Ball());
+        balls.get(0).pt = new Point(380,280);
+        balls.get(0).speedx = 0;
+        balls.get(0).speedy = 0;
+        balls.get(0).size = 50;
+        
+        
+        // many balls
+        /* 
         for (int i=0; i<200; i++)
         {
             balls.add(new Ball());
@@ -46,6 +57,7 @@ public class Bubbles  extends JPanel implements KeyListener {
             balls.get(i).speedy = (int)(Math.random()*10)-5;
             balls.get(i).size = (int)(Math.random()*20)+4;
         }
+        */
         
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
@@ -53,8 +65,40 @@ public class Bubbles  extends JPanel implements KeyListener {
                 checkBorder();
             }
         }, 20, 20);
-        
+    }
+    
+    private void splitBall()
+    {
+        int save = balls.size();
+        for (int i=0; i<save; i++)
+        {
+            balls.add(new Ball());
+            balls.get(balls.size()-1).pt = new Point(balls.get(i).pt);
+            balls.get(balls.size()-1).speedx = (int)(Math.random()*5+1)*-1;
+            balls.get(balls.size()-1).speedy = (int)(Math.random()*5+1)*-1;
+            balls.get(balls.size()-1).size = balls.get(i).size/2+4;
 
+            balls.add(new Ball());
+            balls.get(balls.size()-1).pt = new Point(balls.get(i).pt);
+            balls.get(balls.size()-1).speedx = (int)(Math.random()*5+1)*-1;
+            balls.get(balls.size()-1).speedy = (int)(Math.random()*5+1);
+            balls.get(balls.size()-1).size = balls.get(i).size/2+4;
+
+            balls.add(new Ball());
+            balls.get(balls.size()-1).pt = new Point(balls.get(i).pt);
+            balls.get(balls.size()-1).speedx = (int)(Math.random()*5+1);
+            balls.get(balls.size()-1).speedy = (int)(Math.random()*5+1)*-1;
+            balls.get(balls.size()-1).size = balls.get(i).size/2+4;
+
+            balls.add(new Ball());
+            balls.get(balls.size()-1).pt = new Point(balls.get(i).pt);
+            balls.get(balls.size()-1).speedx = (int)(Math.random()*5+1);
+            balls.get(balls.size()-1).speedy = (int)(Math.random()*5+1);
+            balls.get(balls.size()-1).size = balls.get(i).size/2+4;
+
+            //balls.remove(save);
+        }
+        System.out.println(balls.size());
     }
     
     private void checkBorder()
@@ -104,7 +148,7 @@ public class Bubbles  extends JPanel implements KeyListener {
     @Override
     public void keyPressed(KeyEvent ke) {
         //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        System.out.println("a");
+        splitBall();
     }
 
     @Override
