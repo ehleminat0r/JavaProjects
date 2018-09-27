@@ -21,13 +21,6 @@ import java.util.TimerTask;
  *
  * @author lhassler
  */
-class Ball
-{
-    Point pt = new Point();
-    int speedx;
-    int speedy;
-    int size;
-}
 
 public class Bubbles  extends JPanel implements KeyListener {
     
@@ -44,7 +37,7 @@ public class Bubbles  extends JPanel implements KeyListener {
         balls.get(0).pt = new Point(380,280);
         balls.get(0).speedx = 0;
         balls.get(0).speedy = 0;
-        balls.get(0).size = 50;
+        balls.get(0).size = 80;
         
         
         // many balls
@@ -70,34 +63,45 @@ public class Bubbles  extends JPanel implements KeyListener {
     private void splitBall()
     {
         int save = balls.size();
+        Ball[] ballsave = new Ball[1000];
         for (int i=0; i<save; i++)
         {
             balls.add(new Ball());
             balls.get(balls.size()-1).pt = new Point(balls.get(i).pt);
             balls.get(balls.size()-1).speedx = (int)(Math.random()*5+1)*-1;
             balls.get(balls.size()-1).speedy = (int)(Math.random()*5+1)*-1;
-            balls.get(balls.size()-1).size = balls.get(i).size/2+4;
+            balls.get(balls.size()-1).size = balls.get(i).size/2+6;
 
             balls.add(new Ball());
             balls.get(balls.size()-1).pt = new Point(balls.get(i).pt);
             balls.get(balls.size()-1).speedx = (int)(Math.random()*5+1)*-1;
             balls.get(balls.size()-1).speedy = (int)(Math.random()*5+1);
-            balls.get(balls.size()-1).size = balls.get(i).size/2+4;
+            balls.get(balls.size()-1).size = balls.get(i).size/2+6;
 
             balls.add(new Ball());
             balls.get(balls.size()-1).pt = new Point(balls.get(i).pt);
             balls.get(balls.size()-1).speedx = (int)(Math.random()*5+1);
             balls.get(balls.size()-1).speedy = (int)(Math.random()*5+1)*-1;
-            balls.get(balls.size()-1).size = balls.get(i).size/2+4;
+            balls.get(balls.size()-1).size = balls.get(i).size/2+6;
 
             balls.add(new Ball());
             balls.get(balls.size()-1).pt = new Point(balls.get(i).pt);
             balls.get(balls.size()-1).speedx = (int)(Math.random()*5+1);
             balls.get(balls.size()-1).speedy = (int)(Math.random()*5+1);
-            balls.get(balls.size()-1).size = balls.get(i).size/2+4;
-
-            //balls.remove(save);
+            balls.get(balls.size()-1).size = balls.get(i).size/2+6;
+            
+            ballsave[i] = balls.get(i);
         }
+
+        for (int i=0; i<ballsave.length; i++)
+        {
+            if (ballsave[i] != null)
+            {
+                balls.remove(ballsave[i]);
+            }
+            //balls.remove(i);
+        }
+        
         System.out.println(balls.size());
     }
     
@@ -136,6 +140,7 @@ public class Bubbles  extends JPanel implements KeyListener {
         {
             g.setColor(Color.white);
             g.fillOval(balls.get(i).pt.x, balls.get(i).pt.y, balls.get(i).size , balls.get(i).size);
+            g.drawString(Integer.toString(i), balls.get(i).pt.x, balls.get(i).pt.y);
         }
         repaint();
     }
