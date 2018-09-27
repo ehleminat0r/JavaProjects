@@ -39,6 +39,7 @@ public class GitProject {
 class Frame extends JFrame implements ActionListener
 {
     Timer timer = new Timer();
+    Timer timer2 = new Timer();
     JButton[][] buttons = new JButton[10][1];
     List<Ball> balls = new ArrayList<>(); 
     Panel pan = new Panel(balls);
@@ -80,8 +81,13 @@ class Frame extends JFrame implements ActionListener
         {
             balls.add(new Ball());
             balls.get(i).pt = new Point(i*38, 0);
-            balls.get(i).speedx = (int)(Math.random()*10)-5;
-            balls.get(i).speedy = (int)(Math.random()*10)-5;
+            balls.get(i).speedx = 0;
+            do
+            {
+                balls.get(i).speedy = (int)(Math.random()*10)-5;    
+            }
+            while (balls.get(i).speedy == 0);
+            
             balls.get(i).size = 30;
         }
         
@@ -93,6 +99,27 @@ class Frame extends JFrame implements ActionListener
             }
         }, 20, 20);
         
+        // Second timer
+        timer2.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run()
+            {
+                balls.add(new Ball());
+                balls.get(balls.size()-1).pt = new Point(100,100);
+                do
+                {
+                    balls.get(balls.size()-1).speedy = (int)(Math.random()*10)-5;    
+                }
+                while (balls.get(balls.size()-1).speedy == 0);
+                do
+                {
+                    balls.get(balls.size()-1).speedx = (int)(Math.random()*10)-5;    
+                }
+                while (balls.get(balls.size()-1).speedx == 0);
+                balls.get(balls.size()-1).size = 10;
+            }
+        }, 500, 500);
+        
         this.repaint();
     }    
     
@@ -100,8 +127,10 @@ class Frame extends JFrame implements ActionListener
     {
         for (int i=0; i<balls.size(); i++)
         {
+            // Move Balls
             balls.get(i).pt = new Point(balls.get(i).pt.x + balls.get(i).speedx, balls.get(i).pt.y + balls.get(i).speedy);
             
+            // Check Border
             if (balls.get(i).pt.x < 0)
             {
                 balls.get(i).speedx *= -1;
@@ -118,6 +147,16 @@ class Frame extends JFrame implements ActionListener
             if (balls.get(i).pt.y > pan.getHeight()-30)
             {
                 balls.get(i).speedy *= -1;
+                
+                // Add balls
+                /*
+                balls.add(new Ball());
+                balls.get(balls.size()-1).pt = new Point(10,10);
+                balls.get(balls.size()-1).speedx = (int)(Math.random()*10)-5;
+                balls.get(balls.size()-1).speedy = (int)(Math.random()*10)-5;
+                balls.get(balls.size()-1).size = 10;
+                */
+                
             }
         }
     }
@@ -179,6 +218,11 @@ class Panel extends JPanel
             g.setColor(Color.black);
             g.fillOval(balls.get(i).pt.x, balls.get(i).pt.y, balls.get(i).size , balls.get(i).size);
             g.drawString(Integer.toString(i), balls.get(i).pt.x, balls.get(i).pt.y);
+            if (i>10)
+            {
+                g.drawLine(balls.get(i).pt.x+5, balls.get(i).pt.y+5, balls.get(i-1).pt.x+5, balls.get(i-1).pt.y+5);
+            }
+            
         }
         repaint();
     }

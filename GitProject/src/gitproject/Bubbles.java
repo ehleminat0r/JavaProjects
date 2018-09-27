@@ -63,7 +63,7 @@ public class Bubbles  extends JPanel implements KeyListener {
     private void splitBall()
     {
         int save = balls.size();
-        Ball[] ballsave = new Ball[1000];
+        Ball[] ballsave = new Ball[1024];
         for (int i=0; i<save; i++)
         {
             balls.add(new Ball());
@@ -115,7 +115,7 @@ public class Bubbles  extends JPanel implements KeyListener {
             {
                 balls.get(i).speedx *= -1;
             }
-            if (balls.get(i).pt.x > this.getWidth())
+            if (balls.get(i).pt.x > this.getWidth()-35)
             {
                 balls.get(i).speedx *= -1;
             }
@@ -124,7 +124,7 @@ public class Bubbles  extends JPanel implements KeyListener {
             {
                 balls.get(i).speedy *= -1;
             }
-            if (balls.get(i).pt.y > this.getHeight())
+            if (balls.get(i).pt.y > this.getHeight()-50)
             {
                 balls.get(i).speedy *= -1;
             }
