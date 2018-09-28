@@ -7,15 +7,22 @@ package gitproject;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Point;
 import java.util.List;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 
 /**
  *
@@ -26,6 +33,7 @@ public class Bubbles  extends JPanel implements KeyListener {
     
     List<Ball> balls = new ArrayList<>(); 
     Timer timer = new Timer();
+    BufferedImage img = new BufferedImage(795, 572, BufferedImage.TYPE_INT_RGB);
 
     public Bubbles(int w, int h)
     {
@@ -57,7 +65,7 @@ public class Bubbles  extends JPanel implements KeyListener {
             public void run() {
                 checkBorder();
             }
-        }, 20, 20);
+        }, 20, 20);  
     }
     
     private void splitBall()
@@ -109,8 +117,14 @@ public class Bubbles  extends JPanel implements KeyListener {
     {
         for (int i=0; i<balls.size(); i++)
         {
+            // move balls
             balls.get(i).pt = new Point(balls.get(i).pt.x + balls.get(i).speedx, balls.get(i).pt.y + balls.get(i).speedy);
-            
+            // draw line
+            if (balls.get(i).pt.x>=0 && balls.get(i).pt.x <=795 && balls.get(i).pt.y >= 0 && balls.get(i).pt.y <= 572)
+            {
+                img.setRGB(balls.get(i).pt.x, balls.get(i).pt.y, Color.RED.getRGB());
+            }
+            // check border
             if (balls.get(i).pt.x < 0)
             {
                 balls.get(i).speedx *= -1;
@@ -134,8 +148,15 @@ public class Bubbles  extends JPanel implements KeyListener {
     @Override
     protected void paintComponent(Graphics g)
     {
+        /*
+        // old background
         g.setColor(Color.blue);
         g.fillRect(0, 0, this.getWidth(), this.getHeight());
+        */
+        // new background with red lines
+        g.drawImage(img, 0, 0, this);
+
+        // draw balls
         for (int i=0; i<balls.size(); i++)
         {
             g.setColor(Color.white);
@@ -154,6 +175,15 @@ public class Bubbles  extends JPanel implements KeyListener {
     public void keyPressed(KeyEvent ke) {
         //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         splitBall();
+        if (ke.getKeyCode()== KeyEvent.VK_ENTER)
+        {
+            File outputfile = new File("C:\\Users\\lhassler\\Desktop\\image.jpg");
+            try {
+                ImageIO.write(img, "jpg", outputfile);
+            } catch (IOException ex) {
+                Logger.getLogger(Bubbles.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
 
     @Override
