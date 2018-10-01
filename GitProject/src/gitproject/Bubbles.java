@@ -7,7 +7,6 @@ package gitproject;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Point;
 import java.util.List;
 import java.awt.event.KeyEvent;
@@ -34,6 +33,7 @@ public class Bubbles  extends JPanel implements KeyListener {
     List<Ball> balls = new ArrayList<>(); 
     Timer timer = new Timer();
     BufferedImage img = new BufferedImage(795, 572, BufferedImage.TYPE_INT_RGB);
+    boolean showBalls = true;
 
     public Bubbles(int w, int h)
     {
@@ -46,20 +46,9 @@ public class Bubbles  extends JPanel implements KeyListener {
         balls.get(0).speedx = 0;
         balls.get(0).speedy = 0;
         balls.get(0).size = 80;
-        
-        
-        // many balls
-        /* 
-        for (int i=0; i<200; i++)
-        {
-            balls.add(new Ball());
-            balls.get(i).pt = new Point((int)(Math.random()*w),(int)(Math.random()*h));
-            balls.get(i).speedx = (int)(Math.random()*10)-5;
-            balls.get(i).speedy = (int)(Math.random()*10)-5;
-            balls.get(i).size = (int)(Math.random()*20)+4;
-        }
-        */
-        
+        balls.get(0).color = Color.WHITE;
+
+        // check timer
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
@@ -79,26 +68,32 @@ public class Bubbles  extends JPanel implements KeyListener {
             balls.get(balls.size()-1).speedx = (int)(Math.random()*5+1)*-1;
             balls.get(balls.size()-1).speedy = (int)(Math.random()*5+1)*-1;
             balls.get(balls.size()-1).size = balls.get(i).size/2+6;
+            balls.get(balls.size()-1).color = Color.RED;
 
             balls.add(new Ball());
             balls.get(balls.size()-1).pt = new Point(balls.get(i).pt);
             balls.get(balls.size()-1).speedx = (int)(Math.random()*5+1)*-1;
             balls.get(balls.size()-1).speedy = (int)(Math.random()*5+1);
             balls.get(balls.size()-1).size = balls.get(i).size/2+6;
+            balls.get(balls.size()-1).color = Color.GREEN;
 
             balls.add(new Ball());
             balls.get(balls.size()-1).pt = new Point(balls.get(i).pt);
             balls.get(balls.size()-1).speedx = (int)(Math.random()*5+1);
             balls.get(balls.size()-1).speedy = (int)(Math.random()*5+1)*-1;
             balls.get(balls.size()-1).size = balls.get(i).size/2+6;
+            balls.get(balls.size()-1).color = Color.BLUE;
 
             balls.add(new Ball());
             balls.get(balls.size()-1).pt = new Point(balls.get(i).pt);
             balls.get(balls.size()-1).speedx = (int)(Math.random()*5+1);
             balls.get(balls.size()-1).speedy = (int)(Math.random()*5+1);
             balls.get(balls.size()-1).size = balls.get(i).size/2+6;
-            
-            ballsave[i] = balls.get(i);
+            balls.get(balls.size()-1).color = Color.YELLOW;
+            if (i<1024)
+            {
+                ballsave[i] = balls.get(i);    
+            }
         }
 
         for (int i=0; i<ballsave.length; i++)
@@ -107,10 +102,9 @@ public class Bubbles  extends JPanel implements KeyListener {
             {
                 balls.remove(ballsave[i]);
             }
-            //balls.remove(i);
-        }
-        
-        System.out.println(balls.size());
+        }        
+        System.out.println("Number of Ball Objects: "+balls.size());
+
     }
     
     private void checkBorder()
@@ -122,7 +116,23 @@ public class Bubbles  extends JPanel implements KeyListener {
             // draw line
             if (balls.get(i).pt.x>=0 && balls.get(i).pt.x <=795 && balls.get(i).pt.y >= 0 && balls.get(i).pt.y <= 572)
             {
-                img.setRGB(balls.get(i).pt.x, balls.get(i).pt.y, Color.RED.getRGB());
+                if (i%4 == 0)
+                {
+                    img.setRGB(balls.get(i).pt.x, balls.get(i).pt.y, Color.RED.getRGB());
+                }
+                if (i%4 == 1)
+                {
+                    img.setRGB(balls.get(i).pt.x, balls.get(i).pt.y, Color.GREEN.getRGB());
+                }
+                if (i%4 == 2)
+                {
+                    img.setRGB(balls.get(i).pt.x, balls.get(i).pt.y, Color.BLUE.getRGB());
+                }
+                if (i%4 == 3)
+                {
+                    img.setRGB(balls.get(i).pt.x, balls.get(i).pt.y, Color.YELLOW.getRGB());
+                }
+                
             }
             // check border
             if (balls.get(i).pt.x < 0)
@@ -148,21 +158,27 @@ public class Bubbles  extends JPanel implements KeyListener {
     @Override
     protected void paintComponent(Graphics g)
     {
-        /*
-        // old background
-        g.setColor(Color.blue);
-        g.fillRect(0, 0, this.getWidth(), this.getHeight());
-        */
-        // new background with red lines
+        // background with colored lines
         g.drawImage(img, 0, 0, this);
 
         // draw balls
-        for (int i=0; i<balls.size(); i++)
+        if (showBalls)
+        {
+            for (int i=0; i<balls.size(); i++)
+            {
+                g.setColor(balls.get(i).color);
+                g.fillOval(balls.get(i).pt.x, balls.get(i).pt.y, balls.get(i).size , balls.get(i).size);
+                g.drawString(Integer.toString(i), balls.get(i).pt.x, balls.get(i).pt.y);
+            }
+            g.setColor(Color.white);
+            g.drawString("Balls enabled", 10, 20);
+        }
+        else
         {
             g.setColor(Color.white);
-            g.fillOval(balls.get(i).pt.x, balls.get(i).pt.y, balls.get(i).size , balls.get(i).size);
-            g.drawString(Integer.toString(i), balls.get(i).pt.x, balls.get(i).pt.y);
+            g.drawString("Balls disabled", 10, 20);
         }
+        
         repaint();
     }
     
@@ -175,11 +191,15 @@ public class Bubbles  extends JPanel implements KeyListener {
     public void keyPressed(KeyEvent ke) {
         //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         splitBall();
+        if (ke.getKeyCode()== KeyEvent.VK_1)
+        {
+            showBalls = !showBalls;
+        }
         if (ke.getKeyCode()== KeyEvent.VK_ENTER)
         {
-            File outputfile = new File("C:\\Users\\lhassler\\Desktop\\image.jpg");
+            File outputfile = new File("C:\\Users\\lhassler\\Desktop\\image.png");
             try {
-                ImageIO.write(img, "jpg", outputfile);
+                ImageIO.write(img, "png", outputfile);
             } catch (IOException ex) {
                 Logger.getLogger(Bubbles.class.getName()).log(Level.SEVERE, null, ex);
             }

@@ -8,10 +8,14 @@ package gitproject;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Insets;
 import java.awt.Point;
+import java.awt.Polygon;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Line2D;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
@@ -66,6 +70,7 @@ class Frame extends JFrame implements ActionListener
         {
             for (int j=0; j<buttons[0].length; j++)
             {
+                // Creation of Button Array (two dimensions)
                 buttons[i][j] = new JButton(Integer.toString(i+1));
                 buttons[i][j].setMargin(new Insets(0, 0, 0, 0));            // Entfernt Beschränkung wo Text im JButton stehen darf
                 buttons[i][j].setFont(new Font("Arial", Font.PLAIN, 16));   // legt Schriftart fest
@@ -84,9 +89,10 @@ class Frame extends JFrame implements ActionListener
             balls.get(i).speedx = 0;
             do
             {
-                balls.get(i).speedy = (int)(Math.random()*10)-5;    
+                balls.get(i).speedy = (int)(Math.random()*10)-5;   
             }
             while (balls.get(i).speedy == 0);
+            balls.get(i).speedy = 0;
             
             balls.get(i).size = 30;
         }
@@ -98,7 +104,7 @@ class Frame extends JFrame implements ActionListener
                 checkBorder();
             }
         }, 20, 20);
-        
+                
         // Second timer
         timer2.scheduleAtFixedRate(new TimerTask() {
             @Override
@@ -119,7 +125,7 @@ class Frame extends JFrame implements ActionListener
                 balls.get(balls.size()-1).size = 10;
             }
         }, 500, 500);
-        
+
         this.repaint();
     }    
     
@@ -167,33 +173,44 @@ class Frame extends JFrame implements ActionListener
         {
             case "00":
                 balls.get(0).pt = new Point(0,0);
+                //balls.get(0).speedx = (int)(Math.random()*10)-5;
+                balls.get(0).speedy = (int)(Math.random()*10)-5;
                 break;
             case "10":
                 balls.get(1).pt = new Point(38,0);
+                balls.get(1).speedy = (int)(Math.random()*10)-5;
                 break;
             case "20":
                 balls.get(2).pt = new Point(76,0);
+                balls.get(2).speedy = (int)(Math.random()*10)-5;
                 break;
             case "30":
                 balls.get(3).pt = new Point(114,0);
+                balls.get(3).speedy = (int)(Math.random()*10)-5;
                 break;    
             case "40":
                 balls.get(4).pt = new Point(152,0);
+                balls.get(4).speedy = (int)(Math.random()*10)-5;
                 break;   
             case "50":
                 balls.get(5).pt = new Point(190,0);
+                balls.get(5).speedy = (int)(Math.random()*10)-5;
                 break;
             case "60":
                 balls.get(6).pt = new Point(228,0);
+                balls.get(6).speedy = (int)(Math.random()*10)-5;
                 break;
             case "70":
                 balls.get(7).pt = new Point(266,0);
+                balls.get(7).speedy = (int)(Math.random()*10)-5;
                 break;
             case "80":
                 balls.get(8).pt = new Point(304,0);
+                balls.get(8).speedy = (int)(Math.random()*10)-5;
                 break;
             case "90":
                 balls.get(9).pt = new Point(342,0);
+                balls.get(9).speedy = (int)(Math.random()*10)-5;
                 break;    
         }
     }
@@ -202,10 +219,17 @@ class Frame extends JFrame implements ActionListener
 class Panel extends JPanel
 {
     List<Ball> balls = new ArrayList<>(); 
-    
+    // arrow heads
+    Polygon arrowHead = new Polygon();  
+    AffineTransform tx = new AffineTransform();
+       
     Panel(List<Ball> balls)
     {
         this.balls = balls;
+        // arrow heads
+        arrowHead.addPoint( 0,10);
+        arrowHead.addPoint( -10, -10);
+        arrowHead.addPoint( 10,-10);
     }
     
     @Override
@@ -221,6 +245,17 @@ class Panel extends JPanel
             if (i>10)
             {
                 g.drawLine(balls.get(i).pt.x+5, balls.get(i).pt.y+5, balls.get(i-1).pt.x+5, balls.get(i-1).pt.y+5);
+                
+                // arrowheads todo!
+                tx.setToIdentity();
+                double angle = Math.atan2(balls.get(i).pt.y-balls.get(i-1).pt.y, balls.get(i).pt.x-balls.get(i-1).pt.x);
+                tx.translate(balls.get(i).pt.x, balls.get(i).pt.y);
+                tx.rotate((angle-Math.PI/2d));  
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setTransform(tx);   
+                g2.fill(arrowHead);
+                g2.dispose();
+                
             }
             
         }
