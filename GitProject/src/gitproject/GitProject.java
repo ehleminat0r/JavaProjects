@@ -219,17 +219,10 @@ class Frame extends JFrame implements ActionListener
 class Panel extends JPanel
 {
     List<Ball> balls = new ArrayList<>(); 
-    // arrow heads
-    Polygon arrowHead = new Polygon();  
-    AffineTransform tx = new AffineTransform();
        
     Panel(List<Ball> balls)
     {
         this.balls = balls;
-        // arrow heads
-        arrowHead.addPoint( 0,10);
-        arrowHead.addPoint( -10, -10);
-        arrowHead.addPoint( 10,-10);
     }
     
     @Override
@@ -244,18 +237,7 @@ class Panel extends JPanel
             g.drawString(Integer.toString(i), balls.get(i).pt.x, balls.get(i).pt.y);
             if (i>10)
             {
-                g.drawLine(balls.get(i).pt.x+5, balls.get(i).pt.y+5, balls.get(i-1).pt.x+5, balls.get(i-1).pt.y+5);
-                
-                // arrowheads todo!
-                tx.setToIdentity();
-                double angle = Math.atan2(balls.get(i).pt.y-balls.get(i-1).pt.y, balls.get(i).pt.x-balls.get(i-1).pt.x);
-                tx.translate(balls.get(i).pt.x, balls.get(i).pt.y);
-                tx.rotate((angle-Math.PI/2d));  
-                Graphics2D g2 = (Graphics2D) g.create();
-                g2.setTransform(tx);   
-                g2.fill(arrowHead);
-                g2.dispose();
-                
+                g.drawLine(balls.get(i).pt.x+5, balls.get(i).pt.y+5, balls.get(i-1).pt.x+5, balls.get(i-1).pt.y+5);               
             }
             
         }

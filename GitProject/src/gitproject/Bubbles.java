@@ -114,7 +114,7 @@ public class Bubbles  extends JPanel implements KeyListener {
             // move balls
             balls.get(i).pt = new Point(balls.get(i).pt.x + balls.get(i).speedx, balls.get(i).pt.y + balls.get(i).speedy);
             // draw line
-            if (balls.get(i).pt.x>=0 && balls.get(i).pt.x <=795 && balls.get(i).pt.y >= 0 && balls.get(i).pt.y <= 572)
+            if (balls.get(i).pt.x >= 0 && balls.get(i).pt.x <= 795 && balls.get(i).pt.y >= 0 && balls.get(i).pt.y <= 572)
             {
                 if (i%4 == 0)
                 {
