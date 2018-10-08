@@ -18,11 +18,11 @@ import javax.swing.JPanel;
  *
  * @author lhassler
  */
-public class Tunnel extends JPanel implements MouseListener {
+public class PaintComponentTest extends JPanel implements MouseListener {
     private int mouseX, mouseY = 0;
     int spin = 0;
 
-    public Tunnel(int width, int height) {
+    public PaintComponentTest(int width, int height) {
         this.setBackground(Color.white);
         this.setSize(width, height);
         Timer timer = new Timer();
@@ -77,7 +77,7 @@ public class Tunnel extends JPanel implements MouseListener {
         frame.setLocationByPlatform(true);
         frame.setVisible(true);
         frame.setLayout(null); 
-        Tunnel tPanel = new Tunnel(frame.getWidth(),frame.getHeight());
+        PaintComponentTest tPanel = new PaintComponentTest(frame.getWidth(),frame.getHeight());
         frame.add(tPanel);
         frame.addMouseListener(tPanel);
     }
