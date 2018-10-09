@@ -137,20 +137,20 @@ public class Bubbles  extends JPanel implements KeyListener {
             // check border
             if (balls.get(i).pt.x < 0)
             {
-                balls.get(i).speedx *= -1;
+                balls.get(i).speedx = Math.abs(balls.get(i).speedx);
             }
             if (balls.get(i).pt.x > this.getWidth()-35)
             {
-                balls.get(i).speedx *= -1;
+                balls.get(i).speedx = -Math.abs(balls.get(i).speedx);
             }
             
             if (balls.get(i).pt.y < 0)
             {
-                balls.get(i).speedy *= -1;
+                balls.get(i).speedy = Math.abs(balls.get(i).speedy);
             }
             if (balls.get(i).pt.y > this.getHeight()-50)
             {
-                balls.get(i).speedy *= -1;
+                balls.get(i).speedy = -Math.abs(balls.get(i).speedy);
             }
         }
     }
@@ -197,9 +197,9 @@ public class Bubbles  extends JPanel implements KeyListener {
         }
         if (ke.getKeyCode()== KeyEvent.VK_ENTER)
         {
-            File outputfile = new File("C:\\Users\\lhassler\\Desktop\\image.png");
+            File outputfile = new File("C:\\Users\\lhassler\\Desktop\\image.jpg");
             try {
-                ImageIO.write(img, "png", outputfile);
+                ImageIO.write(img, "jpg", outputfile);
             } catch (IOException ex) {
                 Logger.getLogger(Bubbles.class.getName()).log(Level.SEVERE, null, ex);
             }
