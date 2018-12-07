@@ -45,7 +45,7 @@ class Frame extends JFrame implements ActionListener
     Timer timer = new Timer();
     Timer timer2 = new Timer();
     JButton[][] buttons = new JButton[10][1];
-    List<Ball> balls = new ArrayList<>(); 
+    List<Ball> balls = new ArrayList<>(50); 
     Panel pan = new Panel(balls);
     
     public Frame()

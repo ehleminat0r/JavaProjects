@@ -7,15 +7,20 @@ package gitproject;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.List;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
@@ -42,8 +47,8 @@ class ThisFrame extends JFrame implements ActionListener
         this.setVisible(true);
         this.setLayout(null); 
         
-        TestForm tPanel = new TestForm(200,200);
-        tPanel.setLocation(500, 300);
+        TestForm tPanel = new TestForm(400,400);
+        tPanel.setLocation(300, 100);
         tPanel.setVisible(true);
         this.add(tPanel);
         this.addMouseListener(tPanel);
@@ -98,6 +103,7 @@ class ThisFrame extends JFrame implements ActionListener
 public class TestForm extends JPanel implements MouseListener {
     private int mouseX, mouseY = 0;
     int spin = 0;
+    private static Random rnd = new Random();
 
     public TestForm(int width, int height) {
         this.setBackground(Color.white);
@@ -142,12 +148,57 @@ public class TestForm extends JPanel implements MouseListener {
         g.fillOval(mouseX-20, mouseY-20, 40, 40);
         g.setColor(Color.black);
         g.drawOval(mouseX-20, mouseY-20, 40, 40);
+        for (int i=0; i<50; i++)
+        {
+            g.drawLine(i*2, 0, i*2, fibo(i)/5000);
+        }
         repaint();
     }
-
+    
+    public static int fibo(int number)
+    {
+        int a = 0;
+        int b = 1;
+        int tmp = 0;
+         
+        for(int i = 0; i < number; i++)
+        {
+            tmp = a + b;
+            a = b;
+            b = tmp;
+        }
+        System.out.println(tmp);
+        return tmp;
+    }
+    
+    List list;
     
     public static void main(String[] args) {
         ThisFrame frame = new ThisFrame("Test");
+        List list = new List();
+        frame.add(list);
+        ArrayList<Integer> aList = new ArrayList<>();
+        for (int i=0; i<100; i++)
+        {
+            aList.add(i<<1);
+            //aList.add(rnd.nextInt(100));
+            list.add(String.format("%08d", Integer.parseInt(Integer.toBinaryString(aList.get(i)))));
+        }
+        list.setBounds(100, 100, 200, 200);
+        list.select(2);
+        
+        Timer timer = new Timer();
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                System.out.println("test");
+                list.add("a");
+                
+            }
+        }, 500, 500);
+        
+        
+
     }
 
     @Override

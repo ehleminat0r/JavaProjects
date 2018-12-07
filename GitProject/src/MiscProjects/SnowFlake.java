@@ -18,18 +18,19 @@ class SnowFlakePanel extends JPanel
     int endX ;
     int endY ;
     
-    if ( size <= 2 ) return;
+    if ( size <= 4 ) return;
     
     // Six lines radiating from (x,y)
     for ( int i = 0; i<6; i++ )
     {
       endX = x + (int)(size*Math.cos( (2*Math.PI/6)*i ));
-      endY = y - (int)(size*Math.sin( (2*Math.PI/6)*i ));
+      endY = y- (int)(size*Math.sin( (2*Math.PI/6)*i ));
       gr.drawLine( x, y, endX, endY );
       drawStar( gr, endX, endY, size/3 );
     }
   }
          
+  @Override
   public void paintComponent( Graphics gr )
   { 
     int width  = getWidth();

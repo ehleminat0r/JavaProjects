@@ -57,7 +57,7 @@ public class Ants
         //nests.add(new Nest(400,420));
         //nests.add(new Nest(400,50));
         ants.add(new Ant(rnd.nextInt(400),rnd.nextInt(400),0,2,nests));
-        for (int i=0; i<15;i++)
+        for (int i=0; i<25;i++)
         {
             ants.add(new Ant(rnd.nextInt(400),rnd.nextInt(400),0,rnd.nextInt(5)+1,nests));
         }
