@@ -167,7 +167,6 @@ public class TestForm extends JPanel implements MouseListener {
             a = b;
             b = tmp;
         }
-        System.out.println(tmp);
         return tmp;
     }
     
@@ -191,9 +190,8 @@ public class TestForm extends JPanel implements MouseListener {
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                System.out.println("test");
+                //System.out.println("test");
                 list.add("a");
-                
             }
         }, 500, 500);
         

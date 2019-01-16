@@ -107,7 +107,7 @@ public class TestTetris extends JPanel {
 	
 	// Put a new, random piece into the dropping position
 	public void newPiece() {
-		pieceOrigin = new Point(5, 0);
+		pieceOrigin = new Point(5, -2);
 		rotation = 0;
 		if (nextPieces.isEmpty()) {
 			Collections.addAll(nextPieces, 0, 1, 2, 3, 4, 5, 6);
