@@ -11,6 +11,9 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -24,12 +27,15 @@ import javax.swing.JPanel;
  *
  * @author lhassler
  */
-public class Driver extends JPanel implements KeyListener{
+public class Driver extends JPanel implements KeyListener, MouseMotionListener  {
     Image image;
     boolean keyW = false;
     boolean keyA = false;
     boolean keyS = false;
     boolean keyD = false;
+    
+    int mouseX;
+    int mouseY;
     
     double x=50;
     double y=50;
@@ -51,16 +57,23 @@ public class Driver extends JPanel implements KeyListener{
         test.setBackground(Color.white);
         frame.add(test);
         frame.addKeyListener(test);
+        frame.addMouseMotionListener(test);
     }
 
     @Override
     protected void paintComponent(Graphics g)
     {
         move();
+        
+        // follow movement
+        
         g.setColor(Color.white);
         g.fillRect(0, 0, 500, 500);
         g.setColor(Color.black);
         g.drawRect(0, 0, 493 , 470);
+        
+        g.drawString("Speed: "+String.format("%.2f", speed), 420, 20);
+        
         try {
             image = ImageIO.read(getClass().getResource("../img/ant_up.png"));
         } catch (IOException ex) {
@@ -79,8 +92,7 @@ public class Driver extends JPanel implements KeyListener{
         g2d.drawImage(image, (int)x, (int)y, null);
         //Reset our graphics object so we can draw with it again.
         //g2d.setTransform(backup);
-    
-        //g.drawImage(image, (int)x, (int)y, this);
+        
         repaint();
     }
 
@@ -164,8 +176,40 @@ public class Driver extends JPanel implements KeyListener{
             }
         }
         
+        double x1 = Math.abs(mouseX-(x+Math.sin(Math.toRadians(winkel+2))));
+        double y1 = Math.abs(mouseY-(y+Math.cos(Math.toRadians(winkel+2))));
+        double z1 = Math.sqrt(Math.pow(x1, 2)+Math.pow(y1, 2));
+        //System.out.println("z1: "+z1);
+        double x2 = Math.abs(mouseX-(x+Math.sin(Math.toRadians(winkel-2))));
+        double y2 = Math.abs(mouseY-(y+Math.cos(Math.toRadians(winkel-2))));
+        double z2 = Math.sqrt(Math.pow(x2, 2)+Math.pow(y2, 2));
+        //System.out.println("z2: "+z2);
+        if (z1>z2)
+        {
+            if (winkel >= 0)
+            {
+                winkel -=2;
+            }
+            else
+            {
+                winkel = 359;
+            }
+        }
+        else
+        {
+            if (winkel <= 359)
+            {
+                winkel += 2;
+            }
+            else
+            {
+                winkel = 0;
+            }
+        }
         x = x+(Math.sin(Math.toRadians(winkel))*speed);
         y = y+(Math.cos(Math.toRadians(winkel))*speed);
+        
+        
         
         if (x<0)
         {
@@ -183,6 +227,34 @@ public class Driver extends JPanel implements KeyListener{
         if (y>445)
         {
             y=445;
+        }
+    }
+
+    @Override
+    public void mouseDragged(MouseEvent me) {
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void mouseMoved(MouseEvent me) {
+        mouseX = me.getX();
+        mouseY = me.getY();
+        if (mouseY < 5)
+        {
+            mouseY=5;
+        }
+        if (mouseY > 440)
+        {
+            mouseY=440;
+        }
+        
+        if (mouseX < 5)
+        {
+            mouseX=5;
+        }
+        if (mouseX > 465)
+        {
+            mouseX=465;
         }
     }
 }
