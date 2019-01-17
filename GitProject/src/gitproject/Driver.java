@@ -71,7 +71,6 @@ public class Driver extends JPanel implements KeyListener, MouseMotionListener  
         g.fillRect(0, 0, 500, 500);
         g.setColor(Color.black);
         g.drawRect(0, 0, 493 , 470);
-        
         g.drawString("Speed: "+String.format("%.2f", speed), 420, 20);
         
         try {
@@ -237,8 +236,8 @@ public class Driver extends JPanel implements KeyListener, MouseMotionListener  
 
     @Override
     public void mouseMoved(MouseEvent me) {
-        mouseX = me.getX();
-        mouseY = me.getY();
+        mouseX = me.getX() -15;
+        mouseY = me.getY()-40;
         if (mouseY < 5)
         {
             mouseY=5;
