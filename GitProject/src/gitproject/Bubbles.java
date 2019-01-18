@@ -197,9 +197,9 @@ public class Bubbles  extends JPanel implements KeyListener {
         }
         if (ke.getKeyCode()== KeyEvent.VK_ENTER)
         {
-            File outputfile = new File("C:\\Users\\lhassler\\Desktop\\image.jpg");
+            File outputfile = new File("C:\\Users\\lhassler\\Desktop\\image.png");
             try {
-                ImageIO.write(img, "jpg", outputfile);
+                ImageIO.write(img, "png", outputfile);
             } catch (IOException ex) {
                 Logger.getLogger(Bubbles.class.getName()).log(Level.SEVERE, null, ex);
             }

@@ -16,6 +16,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -29,11 +30,15 @@ import javax.swing.JPanel;
  */
 public class Driver extends JPanel implements KeyListener, MouseMotionListener  {
     Image image;
+    BufferedImage img = new BufferedImage(493, 470, BufferedImage.TYPE_INT_RGB);
+    Graphics2D graphics;
+    
     boolean keyW = false;
     boolean keyA = false;
     boolean keyS = false;
     boolean keyD = false;
     
+    boolean isFollowingMouse = true;
     int mouseX;
     int mouseY;
     
@@ -41,7 +46,14 @@ public class Driver extends JPanel implements KeyListener, MouseMotionListener  
     double y=50;
     double speed = 0.1;
     int winkel = 0;
-
+    
+    public Driver()
+    {
+        graphics = img.createGraphics();
+        graphics.setPaint ( new Color ( 255, 255, 255 ) );
+        graphics.fillRect ( 0, 0, img.getWidth(), img.getHeight() );
+    }
+    
     public static void main(String[] args)
     {
         JFrame frame = new JFrame("Driver");
@@ -58,39 +70,35 @@ public class Driver extends JPanel implements KeyListener, MouseMotionListener  
         frame.add(test);
         frame.addKeyListener(test);
         frame.addMouseMotionListener(test);
+        
     }
 
     @Override
     protected void paintComponent(Graphics g)
     {
         move();
+         
+        // Background with set pixels
+        g.drawImage(img, 0, 0, this);
         
-        // follow movement
-        
-        g.setColor(Color.white);
-        g.fillRect(0, 0, 500, 500);
+        // black border and text
         g.setColor(Color.black);
         g.drawRect(0, 0, 493 , 470);
-        g.drawString("Speed: "+String.format("%.2f", speed), 420, 20);
+        g.drawString("Speed: "+String.format("%.2f", speed), 420, 35);
+        g.drawString("MouseFollow (Key Q): "+isFollowingMouse, 340, 20);
         
+        // draw and rotate ant
         try {
             image = ImageIO.read(getClass().getResource("../img/ant_up.png"));
         } catch (IOException ex) {
             Logger.getLogger(Driver.class.getName()).log(Level.SEVERE, null, ex);
         }
-        Graphics2D g2d = (Graphics2D)g;
-        //Make a backup so that we can reset our graphics object after using it.
-        //AffineTransform backup = g2d.getTransform();
-        //rx is the x coordinate for rotation, ry is the y coordinate for rotation, and angle
-        //is the angle to rotate the image. If you want to rotate around the center of an image,
-        //use the image's center x and y coordinates for rx and ry.
+        graphics = (Graphics2D)g;
         AffineTransform a = AffineTransform.getRotateInstance(Math.toRadians(-winkel-180), x+(image.getWidth(this)/2), y+(image.getHeight(this)/2));
         //Set our Graphics2D object to the transform
-        g2d.setTransform(a);
+        graphics.setTransform(a);
         //Draw our image like normal
-        g2d.drawImage(image, (int)x, (int)y, null);
-        //Reset our graphics object so we can draw with it again.
-        //g2d.setTransform(backup);
+        graphics.drawImage(image, (int)x, (int)y, null);
         
         repaint();
     }
@@ -123,7 +131,7 @@ public class Driver extends JPanel implements KeyListener, MouseMotionListener  
 
     @Override
     public void keyReleased(KeyEvent ke) {
-                if (ke.getKeyChar() == 'w')
+        if (ke.getKeyChar() == 'w')
         {
             keyW = false;
         }
@@ -139,6 +147,25 @@ public class Driver extends JPanel implements KeyListener, MouseMotionListener  
         if (ke.getKeyChar() == 'd')
         {
             keyD = false;
+        }
+        if (ke.getKeyChar() == 'q')
+        {
+            isFollowingMouse = !isFollowingMouse;
+        }
+        if (ke.getKeyChar() == 'e')
+        {
+            graphics = img.createGraphics();
+            graphics.setPaint ( new Color ( 255, 255, 255 ) );
+            graphics.fillRect ( 0, 0, img.getWidth(), img.getHeight() );
+        }
+        if (ke.getKeyCode()== KeyEvent.VK_ENTER)
+        {
+            File outputfile = new File("C:\\Users\\lhassler\\Desktop\\image.png");
+            try {
+                ImageIO.write(img, "png", outputfile);
+            } catch (IOException ex) {
+                Logger.getLogger(Bubbles.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
 
@@ -174,42 +201,12 @@ public class Driver extends JPanel implements KeyListener, MouseMotionListener  
                 winkel = 359;
             }
         }
+
+        FollowMouse(isFollowingMouse);
         
-        double x1 = Math.abs(mouseX-(x+Math.sin(Math.toRadians(winkel+2))));
-        double y1 = Math.abs(mouseY-(y+Math.cos(Math.toRadians(winkel+2))));
-        double z1 = Math.sqrt(Math.pow(x1, 2)+Math.pow(y1, 2));
-        //System.out.println("z1: "+z1);
-        double x2 = Math.abs(mouseX-(x+Math.sin(Math.toRadians(winkel-2))));
-        double y2 = Math.abs(mouseY-(y+Math.cos(Math.toRadians(winkel-2))));
-        double z2 = Math.sqrt(Math.pow(x2, 2)+Math.pow(y2, 2));
-        //System.out.println("z2: "+z2);
-        if (z1>z2)
-        {
-            if (winkel >= 0)
-            {
-                winkel -=2;
-            }
-            else
-            {
-                winkel = 359;
-            }
-        }
-        else
-        {
-            if (winkel <= 359)
-            {
-                winkel += 2;
-            }
-            else
-            {
-                winkel = 0;
-            }
-        }
         x = x+(Math.sin(Math.toRadians(winkel))*speed);
         y = y+(Math.cos(Math.toRadians(winkel))*speed);
-        
-        
-        
+          
         if (x<0)
         {
             x=0;
@@ -226,6 +223,45 @@ public class Driver extends JPanel implements KeyListener, MouseMotionListener  
         if (y>445)
         {
             y=445;
+        }
+        
+        img.setRGB((int)x+13, (int)y+13, Color.BLACK.getRGB());
+    }
+
+    private void FollowMouse(boolean isFollowing)
+    {
+        if (isFollowing)
+        {
+            double x1 = Math.abs(mouseX-(x+Math.sin(Math.toRadians(winkel+2))));
+            double y1 = Math.abs(mouseY-(y+Math.cos(Math.toRadians(winkel+2))));
+            double z1 = Math.sqrt(Math.pow(x1, 2)+Math.pow(y1, 2));
+            
+            double x2 = Math.abs(mouseX-(x+Math.sin(Math.toRadians(winkel-2))));
+            double y2 = Math.abs(mouseY-(y+Math.cos(Math.toRadians(winkel-2))));
+            double z2 = Math.sqrt(Math.pow(x2, 2)+Math.pow(y2, 2));
+            
+            if (z1>z2)
+            {
+                if (winkel >= 0)
+                {
+                    winkel -=2;
+                }
+                else
+                {
+                    winkel = 359;
+                }
+            }
+            else
+            {
+                if (winkel <= 359)
+                {
+                    winkel += 2;
+                }
+                else
+                {
+                    winkel = 0;
+                }
+            }
         }
     }
 
