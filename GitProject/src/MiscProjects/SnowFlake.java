@@ -17,16 +17,17 @@ class SnowFlakePanel extends JPanel
   {
     int endX ;
     int endY ;
+    int a= 5;
     
-    if ( size <= 4 ) return;
+    if ( size <= 2 ) return;
     
     // Six lines radiating from (x,y)
-    for ( int i = 0; i<6; i++ )
+    for ( int i = 0; i<a; i++ )
     {
-      endX = x + (int)(size*Math.cos( (2*Math.PI/6)*i ));
-      endY = y- (int)(size*Math.sin( (2*Math.PI/6)*i ));
+      endX = x + (int)(size*Math.cos( (2*Math.PI/a)*i ));
+      endY = y- (int)(size*Math.sin( (2*Math.PI/a)*i ));
       gr.drawLine( x, y, endX, endY );
-      drawStar( gr, endX, endY, size/3 );
+      drawStar( gr, endX, endY, (int)(size/2.3) );
     }
   }
          

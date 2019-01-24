@@ -12,12 +12,12 @@ import java.awt.Image;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
@@ -32,15 +32,19 @@ public class Driver extends JPanel implements KeyListener, MouseMotionListener  
     Image image;
     BufferedImage img = new BufferedImage(493, 470, BufferedImage.TYPE_INT_RGB);
     Graphics2D graphics;
+    Color col;
+    int colSize=1;
     
     boolean keyW = false;
     boolean keyA = false;
     boolean keyS = false;
     boolean keyD = false;
     
-    boolean isFollowingMouse = true;
+    int controlType = 0;
     int mouseX;
     int mouseY;
+    int mouseDraggedX;
+    int mouseDraggedY;
     
     double x=50;
     double y=50;
@@ -52,6 +56,7 @@ public class Driver extends JPanel implements KeyListener, MouseMotionListener  
         graphics = img.createGraphics();
         graphics.setPaint ( new Color ( 255, 255, 255 ) );
         graphics.fillRect ( 0, 0, img.getWidth(), img.getHeight() );
+        col = Color.BLACK;
     }
     
     public static void main(String[] args)
@@ -85,7 +90,18 @@ public class Driver extends JPanel implements KeyListener, MouseMotionListener  
         g.setColor(Color.black);
         g.drawRect(0, 0, 493 , 470);
         g.drawString("Speed: "+String.format("%.2f", speed), 420, 35);
-        g.drawString("MouseFollow (Key Q): "+isFollowingMouse, 340, 20);
+        if (controlType == 0)
+        {
+            g.drawString("(Key Q) Manual Control", 360, 20);
+        }
+        else if (controlType == 1)
+        {
+            g.drawString("(Key Q) Mouse Follow", 360, 20);
+        }
+        else if (controlType == 2)
+        {
+            g.drawString("(Key Q) Drag Follow", 360, 20);
+        }
         
         // draw and rotate ant
         try {
@@ -148,17 +164,25 @@ public class Driver extends JPanel implements KeyListener, MouseMotionListener  
         {
             keyD = false;
         }
+        
         if (ke.getKeyChar() == 'q')
         {
-            isFollowingMouse = !isFollowingMouse;
+            if (controlType == 2)
+            {
+                controlType = 0;
+            }
+            else
+            {
+                controlType++;
+            }
         }
-        if (ke.getKeyChar() == 'e')
+        else if (ke.getKeyChar() == 'e')
         {
             graphics = img.createGraphics();
             graphics.setPaint ( new Color ( 255, 255, 255 ) );
             graphics.fillRect ( 0, 0, img.getWidth(), img.getHeight() );
         }
-        if (ke.getKeyCode()== KeyEvent.VK_ENTER)
+        else if (ke.getKeyCode()== KeyEvent.VK_ENTER)
         {
             File outputfile = new File("C:\\Users\\lhassler\\Desktop\\image.png");
             try {
@@ -167,16 +191,28 @@ public class Driver extends JPanel implements KeyListener, MouseMotionListener  
                 Logger.getLogger(Bubbles.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+        switch (ke.getKeyChar())
+        {
+            case '1':
+                colSize=1;
+                break;
+            case '2':
+                colSize=2;
+                break;
+            case '3':
+                colSize=3;
+                break;
+        }
     }
 
     private void move() {
         if (keyW)
         {
-            speed += 0.01;
+            speed += 0.001;
         }
         if (keyS)
         {
-            speed -= 0.01;
+            speed -= 0.001;
         }
         
         if (keyA)
@@ -202,7 +238,7 @@ public class Driver extends JPanel implements KeyListener, MouseMotionListener  
             }
         }
 
-        FollowMouse(isFollowingMouse);
+        FollowMouse();
         
         x = x+(Math.sin(Math.toRadians(winkel))*speed);
         y = y+(Math.cos(Math.toRadians(winkel))*speed);
@@ -224,13 +260,53 @@ public class Driver extends JPanel implements KeyListener, MouseMotionListener  
         {
             y=445;
         }
+        switch(winkel/72)
+        {
+            case 0:
+                col = Color.red;
+                break;
+            case 1:
+                col = Color.BLUE;
+                break;
+            case 2:
+                col = Color.black;
+                break;
+            case 3:
+                col = Color.GREEN;
+                break;
+            case 4:
+                col = Color.cyan;
+                break;
+        }
+        switch (colSize)
+        {
+            case 1:
+                img.setRGB((int)x+13, (int)y+13, col.getRGB());
+                break;
+            case 2:
+                img.setRGB((int)x+13, (int)y+13, col.getRGB());
+                img.setRGB((int)x+13, (int)y+14, col.getRGB());
+                img.setRGB((int)x+14, (int)y+13, col.getRGB());
+                img.setRGB((int)x+14, (int)y+14, col.getRGB());
+                break;
+            case 3:
+                img.setRGB((int)x+12, (int)y+12, col.getRGB());
+                img.setRGB((int)x+12, (int)y+13, col.getRGB());
+                img.setRGB((int)x+12, (int)y+14, col.getRGB());
+                img.setRGB((int)x+13, (int)y+12, col.getRGB());
+                img.setRGB((int)x+13, (int)y+13, col.getRGB());
+                img.setRGB((int)x+13, (int)y+14, col.getRGB());
+                img.setRGB((int)x+14, (int)y+12, col.getRGB());
+                img.setRGB((int)x+14, (int)y+13, col.getRGB());
+                img.setRGB((int)x+14, (int)y+14, col.getRGB());
+                break;
+        }
         
-        img.setRGB((int)x+13, (int)y+13, Color.BLACK.getRGB());
     }
 
-    private void FollowMouse(boolean isFollowing)
+    private void FollowMouse()
     {
-        if (isFollowing)
+        if (controlType == 1)
         {
             double x1 = Math.abs(mouseX-(x+Math.sin(Math.toRadians(winkel+2))));
             double y1 = Math.abs(mouseY-(y+Math.cos(Math.toRadians(winkel+2))));
@@ -239,7 +315,7 @@ public class Driver extends JPanel implements KeyListener, MouseMotionListener  
             double x2 = Math.abs(mouseX-(x+Math.sin(Math.toRadians(winkel-2))));
             double y2 = Math.abs(mouseY-(y+Math.cos(Math.toRadians(winkel-2))));
             double z2 = Math.sqrt(Math.pow(x2, 2)+Math.pow(y2, 2));
-            
+
             if (z1>z2)
             {
                 if (winkel >= 0)
@@ -251,7 +327,40 @@ public class Driver extends JPanel implements KeyListener, MouseMotionListener  
                     winkel = 359;
                 }
             }
-            else
+            else if (z1<z2)
+            {
+                if (winkel <= 359)
+                {
+                    winkel += 2;
+                }
+                else
+                {
+                    winkel = 0;
+                }
+            }
+        }
+        else if (controlType == 2)
+        {
+            double x1 = Math.abs(mouseDraggedX-(x+Math.sin(Math.toRadians(winkel+2))));
+            double y1 = Math.abs(mouseDraggedY-(y+Math.cos(Math.toRadians(winkel+2))));
+            double z1 = Math.sqrt(Math.pow(x1, 2)+Math.pow(y1, 2));
+            
+            double x2 = Math.abs(mouseDraggedX-(x+Math.sin(Math.toRadians(winkel-2))));
+            double y2 = Math.abs(mouseDraggedY-(y+Math.cos(Math.toRadians(winkel-2))));
+            double z2 = Math.sqrt(Math.pow(x2, 2)+Math.pow(y2, 2));
+
+            if (z1>z2)
+            {
+                if (winkel >= 0)
+                {
+                    winkel -=2;
+                }
+                else
+                {
+                    winkel = 359;
+                }
+            }
+            else if (z1<z2)
             {
                 if (winkel <= 359)
                 {
@@ -264,10 +373,13 @@ public class Driver extends JPanel implements KeyListener, MouseMotionListener  
             }
         }
     }
+    
 
     @Override
     public void mouseDragged(MouseEvent me) {
         //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        mouseDraggedX = me.getX() -15;
+        mouseDraggedY = me.getY()-40;
     }
 
     @Override
