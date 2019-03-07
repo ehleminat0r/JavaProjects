@@ -11,8 +11,11 @@ import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.Random;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
@@ -23,16 +26,22 @@ import javax.swing.JPanel;
 public class Minesweeper extends JFrame implements ActionListener {
     // Klassenvariablen
     Random rnd = new Random();
-    int xsize = 10;     // Spielfeldbreite
-    int ysize = 10;     // Spielfeldhöhe
-    int BOMBAMOUNT = 20; // Bestimmt die Anzahl der Bomben (X% der Felder sind Bomben)
+    static int xsize = 20;     // Spielfeldbreite
+    static int ysize = 20;     // Spielfeldhöhe
+    int BOMBAMOUNT = 10; // Bestimmt die Anzahl der Bomben (X% der Felder sind Bomben)
     
     int bombcount = 0;
     int fieldsize = xsize*ysize;
     
     boolean[][] bombs = new boolean[xsize][ysize];
-    JButton[][] buttons = new JButton[xsize][ysize];
-            
+    final static JButton[][] buttons = new JButton[xsize][ysize];
+          
+    MouseAdapter ma = new MouseAdapter() {    public void mouseClicked(MouseEvent e) {
+        if (e.getButton() == 3) { // if right click
+            ((JButton) e.getSource()).setText("B");
+        } 
+    }};
+    
     // Konstruktor
     public Minesweeper() {
         // Fenster Eigenschaften
@@ -74,12 +83,16 @@ public class Minesweeper extends JFrame implements ActionListener {
                 buttons[i][j].setFont(new Font("Arial", Font.PLAIN, 16));   // legt Schriftart fest
                 buttons[i][j].setBounds(i*40, j*40, 40, 40);
                 buttons[i][j].addActionListener(this);
-                buttons[i][j].setActionCommand(Integer.toString(i)+Integer.toString(j));    // Aktionlistener mit Position als Übergabe z.B. "05"
+                buttons[i][j].setActionCommand(Integer.toString(i)+" "+Integer.toString(j));    // Aktionlistener mit Position als Übergabe z.B. "0 5"
+                buttons[i][j].addMouseListener(ma);
                 this.add(buttons[i][j]);
             }
        } 
        this.repaint();  // Fenster neu zeichnen
     }
+    
+
+                    ;
     
     public static void main(String[] args) {
         new Minesweeper();
@@ -90,7 +103,7 @@ public class Minesweeper extends JFrame implements ActionListener {
         
         for (int i=0; i<bombs.length; i++)
             for (int j=0; j<bombs[0].length; j++)
-                if (ae.getActionCommand().equals(Integer.toString(i)+Integer.toString(j))) {
+                if (ae.getActionCommand().equals(Integer.toString(i)+" "+Integer.toString(j))) {
                     // Knöpfe mit Anzahl der anliegenden Bomben beschriften
                     int bcount = 0;
                     for (int xcheck = i-1; xcheck <= i+1; xcheck++) 

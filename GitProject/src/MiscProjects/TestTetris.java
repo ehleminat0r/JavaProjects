@@ -301,7 +301,7 @@ public class TestTetris extends JPanel {
 			@Override public void run() {
 				while (true) {
 					try {
-						Thread.sleep(1000);
+						Thread.sleep(400);
 						game.dropDown();
 					} catch ( InterruptedException e ) {}
 				}

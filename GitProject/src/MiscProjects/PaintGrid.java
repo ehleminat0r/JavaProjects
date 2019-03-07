@@ -33,7 +33,7 @@ class Graph extends JPanel
         public void run()
         {
             secondspassed++;
-            System.out.println(secondspassed);
+            //System.out.println(secondspassed);
             repaint();
         }
     };
@@ -132,11 +132,8 @@ public class PaintGrid extends JPanel{
         JButton selectColor = new JButton("");
         pgframe.add(selectColor);
         selectColor.setBounds(425, 0,40, 40);       
-        selectColor.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent ae) {
-                System.out.println("dssaf");
-            }
+        selectColor.addActionListener((ActionEvent ae) -> {
+            System.out.println(ae.getActionCommand());
         });
         
         pgframe.repaint();

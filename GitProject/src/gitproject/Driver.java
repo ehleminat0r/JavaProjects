@@ -278,6 +278,29 @@ public class Driver extends JPanel implements KeyListener, MouseMotionListener  
                 col = Color.cyan;
                 break;
         }
+        int x2 = (int)(Math.sin(Math.toRadians(winkel))*100)%3;
+        int y2 = (int)(Math.cos(Math.toRadians(winkel))*100)%3;
+        if (img.getRGB((int)x+13+x2, (int)y+13+y2) != img.getRGB(5, 5))
+        {
+            if (img.getRGB((int)x+13, (int)y+13) == -1)
+            {
+                img.setRGB((int)x+11, (int)y+13, Color.black.getRGB());
+                img.setRGB((int)x+15, (int)y+13, Color.black.getRGB());
+                img.setRGB((int)x+13, (int)y+11, Color.black.getRGB());
+                img.setRGB((int)x+13, (int)y+15, Color.black.getRGB());
+                
+                img.setRGB((int)x+12, (int)y+12, Color.black.getRGB());
+                img.setRGB((int)x+12, (int)y+13, Color.black.getRGB());
+                img.setRGB((int)x+12, (int)y+14, Color.black.getRGB());
+                img.setRGB((int)x+13, (int)y+12, Color.black.getRGB());
+                img.setRGB((int)x+13, (int)y+13, Color.black.getRGB());
+                img.setRGB((int)x+13, (int)y+14, Color.black.getRGB());
+                img.setRGB((int)x+14, (int)y+12, Color.black.getRGB());
+                img.setRGB((int)x+14, (int)y+13, Color.black.getRGB());
+                img.setRGB((int)x+14, (int)y+14, Color.black.getRGB());
+            }
+        }
+        
         switch (colSize)
         {
             case 1:
@@ -290,6 +313,11 @@ public class Driver extends JPanel implements KeyListener, MouseMotionListener  
                 img.setRGB((int)x+14, (int)y+14, col.getRGB());
                 break;
             case 3:
+                img.setRGB((int)x+11, (int)y+13, col.getRGB());
+                img.setRGB((int)x+15, (int)y+13, col.getRGB());
+                img.setRGB((int)x+13, (int)y+11, col.getRGB());
+                img.setRGB((int)x+13, (int)y+15, col.getRGB());
+                
                 img.setRGB((int)x+12, (int)y+12, col.getRGB());
                 img.setRGB((int)x+12, (int)y+13, col.getRGB());
                 img.setRGB((int)x+12, (int)y+14, col.getRGB());
