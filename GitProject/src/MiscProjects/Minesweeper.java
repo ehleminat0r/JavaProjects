@@ -13,10 +13,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowEvent;
 import java.util.Random;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 /**
@@ -31,6 +33,7 @@ public class Minesweeper extends JFrame implements ActionListener {
     int BOMBAMOUNT = 10; // Bestimmt die Anzahl der Bomben (X% der Felder sind Bomben)
     
     int bombcount = 0;
+    boolean isLost = false;
     int fieldsize = xsize*ysize;
     
     boolean[][] bombs = new boolean[xsize][ysize];
@@ -38,7 +41,11 @@ public class Minesweeper extends JFrame implements ActionListener {
           
     MouseAdapter ma = new MouseAdapter() {    public void mouseClicked(MouseEvent e) {
         if (e.getButton() == 3) { // if right click
-            ((JButton) e.getSource()).setText("B");
+            if (((JButton) e.getSource()).getText() == "")
+            {
+                ((JButton) e.getSource()).setText("B");
+                ((JButton) e.getSource()).setBackground(Color.blue);
+            }
         } 
     }};
     
@@ -114,6 +121,7 @@ public class Minesweeper extends JFrame implements ActionListener {
                         }
 
                     buttons[i][j].setText(Integer.toString(bcount));
+                    buttons[i][j].setBackground(null);
                     if (bcount == 0) {
                         buttons[i][j].setVisible(false);
                         checknb(i,j);
@@ -123,24 +131,48 @@ public class Minesweeper extends JFrame implements ActionListener {
                     if (bombs[i][j]==true) {
                         buttons[i][j].setText("B");
                         buttons[i][j].setBackground(Color.red);
+                        JOptionPane.showMessageDialog(null, "Du hast leider verloren :( ", "Verloren", JOptionPane.WARNING_MESSAGE);
+                        isLost = true;
+                        DisableButtons();
+                        
                     }
                 }
         
-        
-        // Gewinn checken
+        if (!isLost)
+        {
+            // Gewinn checken
         fieldsize -= bombcount;
         for (int i=0; i<bombs.length; i++)
             for (int j=0; j<bombs[0].length; j++) {
                 if(buttons[i][j].isVisible()==false)
                     fieldsize--;
-                else
-                    if(!buttons[i][j].getText().equals(""))
-                        fieldsize--;
+                else if(!buttons[i][j].getText().equals("") &&  buttons[i][j].getBackground() != Color.blue)
+                    fieldsize--;
             }
         if (fieldsize<=0)
-            System.out.println("Gewonnen");
+        {
+            JOptionPane.showMessageDialog(null, "Du hast gewonnen :) ", "Gewonnen", JOptionPane.INFORMATION_MESSAGE);
+            DisableButtons();
+        }
+            
         fieldsize = xsize*ysize;
-             
+        }
+    }
+    
+    private void DisableButtons()
+    {
+        for (int i=0; i<bombs.length; i++)
+            for (int j=0; j<bombs[0].length; j++)
+            {
+                buttons[i][j].setEnabled(false);
+                if (bombs[i][j] == true)
+                {
+                    buttons[i][j].setText("B");
+                    buttons[i][j].setBackground(Color.red);
+                }
+            }
+        // close window
+        //this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
     }
     
     public void checknb(int x, int y) {     //Prüfen ob Nachbarknopf auch 0 ist
