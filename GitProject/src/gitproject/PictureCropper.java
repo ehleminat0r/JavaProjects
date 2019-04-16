@@ -8,6 +8,7 @@ package gitproject;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -20,7 +21,8 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
-import javax.swing.JCheckBox;
+import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JColorChooser;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -30,7 +32,6 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
-import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -60,9 +61,16 @@ public class PictureCropper implements ActionListener, ChangeListener
 
     // paint bar
     private JMenu mMenuPaint = new JMenu("Paint");
-    private JCheckBox mCheckBoxPaint = new JCheckBox("Paint");
+    private JCheckBoxMenuItem mCheckBoxPaint = new JCheckBoxMenuItem("Paint");
     private JSlider mSlider = new JSlider(1,20);
     private JLabel mSliderLabel = new JLabel("Brushsize: 10");
+    private JMenuItem mMenuItemColorChooser = new JMenuItem("Choose Color");
+    
+    // zoom bar
+    private JMenu mMenuZoom = new JMenu("Zoom");
+    private JMenuItem mMenuItemZoomOne = new JMenuItem("Default");
+    private JMenuItem mMenuItemZoomHalf = new JMenuItem("Zoom x0,5");
+    private JMenuItem mMenuItemZoomDouble = new JMenuItem("Zoom x2");
     
     // image
     private JFileChooser mFileChooser = new JFileChooser();
@@ -72,7 +80,7 @@ public class PictureCropper implements ActionListener, ChangeListener
     // Main method
     public static void main(String[] args)
     {
-        new PictureCropper();
+        PictureCropper pictureCropper = new PictureCropper();
     }
     
     // Constructor
@@ -116,13 +124,24 @@ public class PictureCropper implements ActionListener, ChangeListener
         
         
         // add paint bar to menu bar
-        mMenuBar.add(mMenuPaint);
+        mMenuBar.add(mMenuPaint);          
         mMenuPaint.add(mCheckBoxPaint);
         mCheckBoxPaint.addActionListener(this);
         mMenuPaint.add(mSlider);
         mSlider.setPreferredSize(new Dimension(120,20));
         mSlider.addChangeListener(this);
         mMenuPaint.add(mSliderLabel);
+        mMenuPaint.add(mMenuItemColorChooser);
+        mMenuItemColorChooser.addActionListener(this);
+        
+        // add zoom bar to menu bar
+        mMenuBar.add(mMenuZoom);
+        mMenuZoom.add(mMenuItemZoomOne);
+        mMenuItemZoomOne.addActionListener(this);
+        mMenuZoom.add(mMenuItemZoomHalf);
+        mMenuItemZoomHalf.addActionListener(this);
+        mMenuZoom.add(mMenuItemZoomDouble);
+        mMenuItemZoomDouble.addActionListener(this);
         
         // set general menu bar
         mFrame.setJMenuBar(mMenuBar);
@@ -230,12 +249,49 @@ public class PictureCropper implements ActionListener, ChangeListener
                 mPicturePanel.paint = false;
             }
         }
+        
+        // Choose Color
+        if (mMenuItemColorChooser == ae.getSource())
+        {
+            mPicturePanel.brushColor = JColorChooser.showDialog(null, "Test", Color.yellow);
+        }
+        
+        // Zoom
+        if (mMenuItemZoomOne == ae.getSource())
+        {
+            mPicturePanel.zoom = 1;
+            resizePanel(1);
+            mPicturePanel.ptOne = null;
+            mPicturePanel.ptTwo = null;
+            mPicturePanel.repaint();
+        }
+        if (mMenuItemZoomHalf == ae.getSource())
+        {
+            mPicturePanel.zoom = 0.5;
+            resizePanel(0.5);
+            mPicturePanel.ptOne = null;
+            mPicturePanel.ptTwo = null;
+            mPicturePanel.repaint();
+        }
+        if (mMenuItemZoomDouble == ae.getSource())
+        {
+            mPicturePanel.zoom = 2;
+            resizePanel(2);
+            mPicturePanel.ptOne = null;
+            mPicturePanel.ptTwo = null;
+            mPicturePanel.repaint();
+        }
     }
 
     private void drawPanel() {
         mPicturePanel.setSize(mImg.getWidth(),mImg.getHeight());
         mFrame.setSize(mImg.getWidth()+6,mImg.getHeight()+52);
         mPicturePanel.bi = mImg;
+    }
+    
+        private void resizePanel(double factor) {
+        mPicturePanel.setSize((int)(mImg.getWidth()*factor),(int)(mImg.getHeight()*factor));
+        mFrame.setSize((int)(mImg.getWidth()*factor)+6,(int)(mImg.getHeight()*factor)+52);
     }
 
     @Override
@@ -255,6 +311,9 @@ class PicturePanel extends JPanel implements MouseListener, MouseMotionListener
     public int rectX, rectY, sizeX, sizeY;
     public boolean paint = false;
     public int brushSize = 10;
+    public Color brushColor = Color.BLACK;
+    int mouseX, mouseY;
+    double zoom = 1;
     
     public PicturePanel()
     {
@@ -266,19 +325,27 @@ class PicturePanel extends JPanel implements MouseListener, MouseMotionListener
     public void paintComponent(Graphics g)
     {
         super.paintComponent(g);
+        Graphics2D g2D = (Graphics2D)g;
         if (bi != null)
         {
-            g.drawImage(bi, 0, 0, this);
+            g2D.scale(zoom, zoom);
+            g2D.drawImage(bi, 0, 0, this);
             if (null != ptOne && null != ptTwo)
             {
                 calcRect();
-                g.drawRect(rectX, rectY, sizeX, sizeY);
+                g2D.drawRect(rectX, rectY, sizeX, sizeY);
+            }
+            if (paint)
+            {
+                g2D.setColor(brushColor);
+                g2D.fillRect(mouseX-(brushSize/2), mouseY-(brushSize/2), brushSize, brushSize);
+                g2D.setColor(Color.BLACK);
             }
         }
         else
         {
-            g.drawRect(0, 0, this.getWidth()-1, this.getHeight()-1);
-            g.drawString("Picture Cropper", this.getWidth()/2 -40, this.getHeight()/2);
+            g2D.drawRect(0, 0, this.getWidth()-1, this.getHeight()-1);
+            g2D.drawString("Picture Cropper", this.getWidth()/2 -40, this.getHeight()/2);
         }
     }
 
@@ -326,7 +393,7 @@ class PicturePanel extends JPanel implements MouseListener, MouseMotionListener
 
     @Override
     public void mousePressed(MouseEvent me) {
-        if (bi != null)
+        if (bi != null && zoom == 1)
         {
             if (!paint)
             {
@@ -337,7 +404,7 @@ class PicturePanel extends JPanel implements MouseListener, MouseMotionListener
 
     @Override
     public void mouseReleased(MouseEvent me) {
-        if (bi != null)
+        if (bi != null && zoom == 1)
         {
             if (!paint)
             {
@@ -354,12 +421,14 @@ class PicturePanel extends JPanel implements MouseListener, MouseMotionListener
 
     @Override
     public void mouseExited(MouseEvent me) {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        mouseX = -20;
+        mouseY = -20;
+        repaint();
     }
 
     @Override
     public void mouseDragged(MouseEvent me) {
-        if (bi != null)
+        if (bi != null && zoom == 1)
         {
             if (!paint)
             {
@@ -372,7 +441,13 @@ class PicturePanel extends JPanel implements MouseListener, MouseMotionListener
                 {
                     for (int j=0; j< brushSize; j++)
                     {
-                       bi.setRGB(me.getX()-(brushSize/2)+i, me.getY()-(brushSize/2)+j, new Color(0,0,0).getRGB()); 
+                        if ( (me.getX()-(brushSize/2)+i) >= 0
+                                && (me.getX()-(brushSize/2)+i) < bi.getWidth()
+                                && (me.getY()-(brushSize/2)+j) >= 0
+                                && (me.getY()-(brushSize/2)+j) < bi.getHeight())
+                        {
+                            bi.setRGB(me.getX()-(brushSize/2)+i, me.getY()-(brushSize/2)+j, brushColor.getRGB()); 
+                        }
                     }
                 }
                 
@@ -383,6 +458,11 @@ class PicturePanel extends JPanel implements MouseListener, MouseMotionListener
 
     @Override
     public void mouseMoved(MouseEvent me) {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (bi != null && paint && zoom == 1)
+        {
+            mouseX = me.getX();
+            mouseY = me.getY();
+            repaint();
+        }
     }
 }
