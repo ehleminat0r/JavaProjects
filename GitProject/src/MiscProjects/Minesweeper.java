@@ -30,7 +30,7 @@ public class Minesweeper extends JFrame implements ActionListener {
     Random rnd = new Random();
     static int xsize = 20;     // Spielfeldbreite
     static int ysize = 20;     // Spielfeldhöhe
-    int BOMBAMOUNT = 10; // Bestimmt die Anzahl der Bomben (X% der Felder sind Bomben)
+    int BOMBAMOUNT = 15; // Bestimmt die Anzahl der Bomben (X% der Felder sind Bomben)
     
     int bombcount = 0;
     boolean isLost = false;
@@ -81,7 +81,7 @@ public class Minesweeper extends JFrame implements ActionListener {
             System.out.println("");
         }
         */
-        
+                
         // Elemente dem Fenster hinzufügen
        for(int i=0; i<bombs.length; i++) {
            for (int j=0; j<bombs[0].length; j++) {

@@ -58,6 +58,7 @@ public class PictureCropper implements ActionListener, ChangeListener
     private JMenu mMenuEdit = new JMenu("Edit");
     private JMenuItem mMenuItemCropSelection = new JMenuItem("Crop Selection");
     private JMenuItem mMenuItemReverseColor = new JMenuItem("Reverse Color");
+    private JMenuItem mMenuItemPixel = new JMenuItem("Pixelate");
 
     // paint bar
     private JMenu mMenuPaint = new JMenu("Paint");
@@ -121,7 +122,8 @@ public class PictureCropper implements ActionListener, ChangeListener
         mMenuItemCropSelection.addActionListener(this);
         mMenuEdit.add(mMenuItemReverseColor);
         mMenuItemReverseColor.addActionListener(this);
-        
+        mMenuEdit.add(mMenuItemPixel);
+        mMenuItemPixel.addActionListener(this);
         
         // add paint bar to menu bar
         mMenuBar.add(mMenuPaint);          
@@ -178,11 +180,18 @@ public class PictureCropper implements ActionListener, ChangeListener
         {
             if (null != mImg)
             {
-                mFileChooser.setSelectedFile(new File(".jpg"));
+                mFileChooser.setSelectedFile(new File(""));
                 if (JFileChooser.APPROVE_OPTION == mFileChooser.showSaveDialog(mFrame))
                 {
-                    try {
-                        ImageIO.write(mImg, "jpg", mFileChooser.getSelectedFile());
+                    try
+                    {
+                        File fileSave = mFileChooser.getSelectedFile();
+                        String filePath = fileSave.getAbsolutePath();
+                        if (!filePath.endsWith(".png"))
+                        {
+                            fileSave = new File(filePath + ".png");
+                        }
+                        ImageIO.write(mImg, "png", fileSave);
                     } catch (IOException ex) {
                         Logger.getLogger(PictureCropper.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -230,6 +239,32 @@ public class PictureCropper implements ActionListener, ChangeListener
                     }
                 }
                 
+                mPicturePanel.repaint();
+            }
+        }
+        
+        // Pixelate
+        if (mMenuItemPixel == ae.getSource())
+        {
+            if (null != mImg)
+            {
+                for(int i=0; i<mImg.getWidth(); i++)
+                {
+                    for (int j=0; j<mImg.getHeight(); j++)
+                    {
+                        if (i%3 != 0)
+                        {
+                            //if (mImg.getRGB(i-3, j-3) != null)
+                            if (i>1)
+                            mImg.setRGB(i, j, mImg.getRGB(i-1, j));
+                        }
+                        if (j%3 != 0)
+                        {
+                            if (j>1)
+                            mImg.setRGB(i, j, mImg.getRGB(i, j-1));
+                        }
+                    }
+                }       
                 mPicturePanel.repaint();
             }
         }
