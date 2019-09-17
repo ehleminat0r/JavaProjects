@@ -92,10 +92,10 @@ class Punkt { // Punktklasse definieren
                 if (snakepart.get(snakepart.size()-1).getPunktY() > 5 )
                     snakepart.add(new Punkt(snakepart.get(snakepart.size()-1).getPunktX(),snakepart.get(snakepart.size()-1).getPunktY()-1));
                 else
-                    snakepart.add(new Punkt(snakepart.get(snakepart.size()-1).getPunktX(),22));
+                    snakepart.add(new Punkt(snakepart.get(snakepart.size()-1).getPunktX(),42));
                 break;
             case 1:     // Schlangenglied unten hinzufügen (s)
-                if (snakepart.get(snakepart.size()-1).getPunktY() < 22 )
+                if (snakepart.get(snakepart.size()-1).getPunktY() < 42 )
                     snakepart.add(new Punkt(snakepart.get(snakepart.size()-1).getPunktX(),snakepart.get(snakepart.size()-1).getPunktY()+1));
                 else
                     snakepart.add(new Punkt(snakepart.get(snakepart.size()-1).getPunktX(),5));
@@ -104,10 +104,10 @@ class Punkt { // Punktklasse definieren
                 if (snakepart.get(snakepart.size()-1).getPunktX() > 1 )
                     snakepart.add(new Punkt(snakepart.get(snakepart.size()-1).getPunktX()-1,snakepart.get(snakepart.size()-1).getPunktY()));
                 else
-                    snakepart.add(new Punkt(18,snakepart.get(snakepart.size()-1).getPunktY()));
+                    snakepart.add(new Punkt(38,snakepart.get(snakepart.size()-1).getPunktY()));
                 break;
             case 3:     // Schlangenglied rechts hinzufügen (d)
-                if (snakepart.get(snakepart.size()-1).getPunktX() < 18 )                
+                if (snakepart.get(snakepart.size()-1).getPunktX() < 38 )                
                     snakepart.add(new Punkt(snakepart.get(snakepart.size()-1).getPunktX()+1,snakepart.get(snakepart.size()-1).getPunktY()));
                 else
                     snakepart.add(new Punkt(1,snakepart.get(snakepart.size()-1).getPunktY()));
@@ -182,10 +182,10 @@ public class SnakeGame extends JPanel implements KeyListener {
     public void snakeMove() {
         snake1.addSnakepart(snake1.getRichtung());
         if (snake1.getSPX(snake1.snakeLength()-1) == snack.getPunktX() && snake1.getSPY(snake1.snakeLength()-1) == snack.getPunktY() ) {
-            snake1.addsnake();
-            snake1.addsnake();
-            snake1.addsnake();
-            gamespeed -= 5;
+            for (int i=0; i<10; i++)
+            {
+                snake1.addsnake();
+            }
             pointz++;
             snackaufsnake = true;
             while (snackaufsnake) {
@@ -206,7 +206,7 @@ public class SnakeGame extends JPanel implements KeyListener {
     @Override
     @Transient
     public Dimension getPreferredSize() {
-        return new Dimension(200,240);
+        return new Dimension(400,440);
     }
     @Override
     protected void paintComponent(Graphics g) {
@@ -217,7 +217,7 @@ public class SnakeGame extends JPanel implements KeyListener {
         
         
         // Rahmen
-        g.drawRect(10, 50, 180, 180);
+        g.drawRect(10, 50, 380, 380);
         /*
         for (int i=0;i<40;i++) {
             g.drawLine(0, 30+(i*10), 400, 30+(i*10));
@@ -291,7 +291,7 @@ public class SnakeGame extends JPanel implements KeyListener {
         
         while(true) {
             
-           speed.setValue(c.gamespeed);
+           //speed.setValue(c.gamespeed);
            speedtxt.setText(Integer.toString(speed.getValue()));
            test.setDelay(speed.getValue());
         }
