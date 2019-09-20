@@ -43,180 +43,185 @@ public class Minesweeper extends JFrame implements ActionListener {
     Timer timer = new Timer();
     
     MouseAdapter ma = new MouseAdapter() {    public void mouseClicked(MouseEvent e) {
-        boolean nomore = false;
-        if (e.getButton() == 3) { // if right click
-           
-            if (((JButton) e.getSource()).getText() == "B")
-            {
-                nomore = true;
-                int bcount = -1;
-                for (int i=0; i<bombs.length; i++)
-                    for (int j=0; j<bombs[0].length; j++)
-                        if (bcount != 0 && buttons[i][j].isVisible()) {
-                            // Knöpfe mit Anzahl der anliegenden Bomben beschriften
-                            bcount = 0;
-                            for (int xcheck = i-1; xcheck <= i+1; xcheck++) 
-                                for (int ycheck = j-1; ycheck <= j+1; ycheck++) {
-                                    if (xcheck < xsize && ycheck < ysize && xcheck >= 0 && ycheck >= 0)
-                                        if (bombs[xcheck][ycheck] == true) 
-                                            bcount++;
-                                }
-                            if (bcount == 0) {
-                                buttons[i][j].setVisible(false);
-                                checknb(i,j);
-                                nomore = false;
-                            }
+        // x == ammount of mouseclicks
+        for (int x=0; x<15; x++)
+        {
+            boolean nomore = false;
+            if (e.getButton() == 3) { // if right click
 
+                if (((JButton) e.getSource()).getText() == "B")
+                {
+                    nomore = true;
+                    int bcount = -1;
+                    for (int i=0; i<bombs.length; i++)
+                        for (int j=0; j<bombs[0].length; j++)
+                            if (bcount != 0 && buttons[i][j].isVisible()) {
+                                // Knöpfe mit Anzahl der anliegenden Bomben beschriften
+                                bcount = 0;
+                                for (int xcheck = i-1; xcheck <= i+1; xcheck++) 
+                                    for (int ycheck = j-1; ycheck <= j+1; ycheck++) {
+                                        if (xcheck < xsize && ycheck < ysize && xcheck >= 0 && ycheck >= 0)
+                                            if (bombs[xcheck][ycheck] == true) 
+                                                bcount++;
+                                    }
+                                if (bcount == 0) {
+                                    buttons[i][j].setVisible(false);
+                                    checknb(i,j);
+                                    nomore = false;
+                                }
+
+                            }
+                }
+
+                if (nomore)
+                {
+                    for (int i=0; i<bombs.length; i++)
+                        for (int j=0; j<bombs[0].length; j++)
+                        {
+                            if (i==0 && j>0 && j < bombs[0].length-1)
+                            {
+                                if (!buttons[i+0][j-1].isVisible()
+                                        || !buttons[i+1][j-1].isVisible()
+                                        || !buttons[i+1][j+0].isVisible()
+                                        || !buttons[i+0][j+1].isVisible()
+                                        || !buttons[i+1][j+1].isVisible())
+                                {
+                                    int bcount = 0;
+                                    for (int xcheck = i-1; xcheck <= i+1; xcheck++) 
+                                        for (int ycheck = j-1; ycheck <= j+1; ycheck++)
+                                        {
+                                            if (xcheck < xsize && ycheck < ysize && xcheck >= 0 && ycheck >= 0)
+                                                if (bombs[xcheck][ycheck] == true) 
+                                                    bcount++;
+                                        }
+
+                                    buttons[i][j].setText(Integer.toString(bcount));
+                                    buttons[i][j].setBackground(null);
+                                    if (bcount == 0)
+                                    {
+                                        buttons[i][j].setVisible(false);
+                                        checknb(i,j);
+                                    }
+                                }
+                            }
+                            if (i == bombs.length-1 && j>0 && j < bombs[0].length-1)
+                            {
+                                if (!buttons[i-1][j-1].isVisible()
+                                        || !buttons[i+0][j-1].isVisible()
+                                        || !buttons[i-1][j+0].isVisible()
+                                        || !buttons[i-1][j+1].isVisible()
+                                        || !buttons[i+0][j+1].isVisible())
+                                {
+                                    int bcount = 0;
+                                    for (int xcheck = i-1; xcheck <= i+1; xcheck++) 
+                                        for (int ycheck = j-1; ycheck <= j+1; ycheck++)
+                                        {
+                                            if (xcheck < xsize && ycheck < ysize && xcheck >= 0 && ycheck >= 0)
+                                                if (bombs[xcheck][ycheck] == true) 
+                                                    bcount++;
+                                        }
+
+                                    buttons[i][j].setText(Integer.toString(bcount));
+                                    buttons[i][j].setBackground(null);
+                                    if (bcount == 0)
+                                    {
+                                        buttons[i][j].setVisible(false);
+                                        checknb(i,j);
+                                    }
+                                }
+                            }
+                            if (j==0 && i>0 && i < bombs.length-1)
+                            {
+                                if (!buttons[i-1][j+0].isVisible()
+                                        || !buttons[i+1][j+0].isVisible()
+                                        || !buttons[i-1][j+1].isVisible()
+                                        || !buttons[i+0][j+1].isVisible()
+                                        || !buttons[i+1][j+1].isVisible())
+                                {
+                                    int bcount = 0;
+                                    for (int xcheck = i-1; xcheck <= i+1; xcheck++) 
+                                        for (int ycheck = j-1; ycheck <= j+1; ycheck++)
+                                        {
+                                            if (xcheck < xsize && ycheck < ysize && xcheck >= 0 && ycheck >= 0)
+                                                if (bombs[xcheck][ycheck] == true) 
+                                                    bcount++;
+                                        }
+
+                                    buttons[i][j].setText(Integer.toString(bcount));
+                                    buttons[i][j].setBackground(null);
+                                    if (bcount == 0)
+                                    {
+                                        buttons[i][j].setVisible(false);
+                                        checknb(i,j);
+                                    }
+                                }
+                            }
+                            if (j== bombs[0].length-1 && i>0 && i < bombs.length-1)
+                            {
+                                if (!buttons[i-1][j-1].isVisible()
+                                        || !buttons[i+0][j-1].isVisible()
+                                        || !buttons[i+1][j-1].isVisible()
+                                        || !buttons[i-1][j+0].isVisible()
+                                        || !buttons[i+1][j+0].isVisible())
+                                {
+                                    int bcount = 0;
+                                    for (int xcheck = i-1; xcheck <= i+1; xcheck++) 
+                                        for (int ycheck = j-1; ycheck <= j+1; ycheck++)
+                                        {
+                                            if (xcheck < xsize && ycheck < ysize && xcheck >= 0 && ycheck >= 0)
+                                                if (bombs[xcheck][ycheck] == true) 
+                                                    bcount++;
+                                        }
+
+                                    buttons[i][j].setText(Integer.toString(bcount));
+                                    buttons[i][j].setBackground(null);
+                                    if (bcount == 0)
+                                    {
+                                        buttons[i][j].setVisible(false);
+                                        checknb(i,j);
+                                    }
+                                }
+                            }
+                            if (i>0 && i < bombs.length-1 && j>0 && j < bombs[0].length-1)
+                            {
+
+                                if (!buttons[i-1][j-1].isVisible()
+                                        || !buttons[i+0][j-1].isVisible()
+                                        || !buttons[i+1][j-1].isVisible()
+                                        || !buttons[i-1][j+0].isVisible()
+                                        || !buttons[i+1][j+0].isVisible()
+                                        || !buttons[i-1][j+1].isVisible()
+                                        || !buttons[i+0][j+1].isVisible()
+                                        || !buttons[i+1][j+1].isVisible())
+                                {
+                                    int bcount = 0;
+                                    for (int xcheck = i-1; xcheck <= i+1; xcheck++) 
+                                        for (int ycheck = j-1; ycheck <= j+1; ycheck++)
+                                        {
+                                            if (xcheck < xsize && ycheck < ysize && xcheck >= 0 && ycheck >= 0)
+                                                if (bombs[xcheck][ycheck] == true) 
+                                                    bcount++;
+                                        }
+
+                                    buttons[i][j].setText(Integer.toString(bcount));
+                                    buttons[i][j].setBackground(null);
+                                    if (bcount == 0)
+                                    {
+                                        buttons[i][j].setVisible(false);
+                                        checknb(i,j);
+                                    }
+                                }
+                            }
                         }
+                }
+
+                if (((JButton) e.getSource()).getText() == "")
+                {
+                    ((JButton) e.getSource()).setText("B");
+                    ((JButton) e.getSource()).setBackground(Color.blue);
+                }
             }
-            
-            if (nomore)
-            {
-                for (int i=0; i<bombs.length; i++)
-                    for (int j=0; j<bombs[0].length; j++)
-                    {
-                        if (i==0 && j>0 && j < bombs[0].length-1)
-                        {
-                            if (!buttons[i+0][j-1].isVisible()
-                                    || !buttons[i+1][j-1].isVisible()
-                                    || !buttons[i+1][j+0].isVisible()
-                                    || !buttons[i+0][j+1].isVisible()
-                                    || !buttons[i+1][j+1].isVisible())
-                            {
-                                int bcount = 0;
-                                for (int xcheck = i-1; xcheck <= i+1; xcheck++) 
-                                    for (int ycheck = j-1; ycheck <= j+1; ycheck++)
-                                    {
-                                        if (xcheck < xsize && ycheck < ysize && xcheck >= 0 && ycheck >= 0)
-                                            if (bombs[xcheck][ycheck] == true) 
-                                                bcount++;
-                                    }
-
-                                buttons[i][j].setText(Integer.toString(bcount));
-                                buttons[i][j].setBackground(null);
-                                if (bcount == 0)
-                                {
-                                    buttons[i][j].setVisible(false);
-                                    checknb(i,j);
-                                }
-                            }
-                        }
-                        if (i == bombs.length-1 && j>0 && j < bombs[0].length-1)
-                        {
-                            if (!buttons[i-1][j-1].isVisible()
-                                    || !buttons[i+0][j-1].isVisible()
-                                    || !buttons[i-1][j+0].isVisible()
-                                    || !buttons[i-1][j+1].isVisible()
-                                    || !buttons[i+0][j+1].isVisible())
-                            {
-                                int bcount = 0;
-                                for (int xcheck = i-1; xcheck <= i+1; xcheck++) 
-                                    for (int ycheck = j-1; ycheck <= j+1; ycheck++)
-                                    {
-                                        if (xcheck < xsize && ycheck < ysize && xcheck >= 0 && ycheck >= 0)
-                                            if (bombs[xcheck][ycheck] == true) 
-                                                bcount++;
-                                    }
-
-                                buttons[i][j].setText(Integer.toString(bcount));
-                                buttons[i][j].setBackground(null);
-                                if (bcount == 0)
-                                {
-                                    buttons[i][j].setVisible(false);
-                                    checknb(i,j);
-                                }
-                            }
-                        }
-                        if (j==0 && i>0 && i < bombs.length-1)
-                        {
-                            if (!buttons[i-1][j+0].isVisible()
-                                    || !buttons[i+1][j+0].isVisible()
-                                    || !buttons[i-1][j+1].isVisible()
-                                    || !buttons[i+0][j+1].isVisible()
-                                    || !buttons[i+1][j+1].isVisible())
-                            {
-                                int bcount = 0;
-                                for (int xcheck = i-1; xcheck <= i+1; xcheck++) 
-                                    for (int ycheck = j-1; ycheck <= j+1; ycheck++)
-                                    {
-                                        if (xcheck < xsize && ycheck < ysize && xcheck >= 0 && ycheck >= 0)
-                                            if (bombs[xcheck][ycheck] == true) 
-                                                bcount++;
-                                    }
-
-                                buttons[i][j].setText(Integer.toString(bcount));
-                                buttons[i][j].setBackground(null);
-                                if (bcount == 0)
-                                {
-                                    buttons[i][j].setVisible(false);
-                                    checknb(i,j);
-                                }
-                            }
-                        }
-                        if (j== bombs[0].length-1 && i>0 && i < bombs.length-1)
-                        {
-                            if (!buttons[i-1][j-1].isVisible()
-                                    || !buttons[i+0][j-1].isVisible()
-                                    || !buttons[i+1][j-1].isVisible()
-                                    || !buttons[i-1][j+0].isVisible()
-                                    || !buttons[i+1][j+0].isVisible())
-                            {
-                                int bcount = 0;
-                                for (int xcheck = i-1; xcheck <= i+1; xcheck++) 
-                                    for (int ycheck = j-1; ycheck <= j+1; ycheck++)
-                                    {
-                                        if (xcheck < xsize && ycheck < ysize && xcheck >= 0 && ycheck >= 0)
-                                            if (bombs[xcheck][ycheck] == true) 
-                                                bcount++;
-                                    }
-
-                                buttons[i][j].setText(Integer.toString(bcount));
-                                buttons[i][j].setBackground(null);
-                                if (bcount == 0)
-                                {
-                                    buttons[i][j].setVisible(false);
-                                    checknb(i,j);
-                                }
-                            }
-                        }
-                        if (i>0 && i < bombs.length-1 && j>0 && j < bombs[0].length-1)
-                        {
-                            
-                            if (!buttons[i-1][j-1].isVisible()
-                                    || !buttons[i+0][j-1].isVisible()
-                                    || !buttons[i+1][j-1].isVisible()
-                                    || !buttons[i-1][j+0].isVisible()
-                                    || !buttons[i+1][j+0].isVisible()
-                                    || !buttons[i-1][j+1].isVisible()
-                                    || !buttons[i+0][j+1].isVisible()
-                                    || !buttons[i+1][j+1].isVisible())
-                            {
-                                int bcount = 0;
-                                for (int xcheck = i-1; xcheck <= i+1; xcheck++) 
-                                    for (int ycheck = j-1; ycheck <= j+1; ycheck++)
-                                    {
-                                        if (xcheck < xsize && ycheck < ysize && xcheck >= 0 && ycheck >= 0)
-                                            if (bombs[xcheck][ycheck] == true) 
-                                                bcount++;
-                                    }
-
-                                buttons[i][j].setText(Integer.toString(bcount));
-                                buttons[i][j].setBackground(null);
-                                if (bcount == 0)
-                                {
-                                    buttons[i][j].setVisible(false);
-                                    checknb(i,j);
-                                }
-                            }
-                        }
-                    }
-            }
-            
-            if (((JButton) e.getSource()).getText() == "")
-            {
-                ((JButton) e.getSource()).setText("B");
-                ((JButton) e.getSource()).setBackground(Color.blue);
-            }
+        
         } 
     }};
     
@@ -401,6 +406,8 @@ public class Minesweeper extends JFrame implements ActionListener {
                 if (i < xsize && j < ysize && i >= 0 && j >= 0)
                     if (bombs[i][j] == true) 
                         checkzero++;
+
+        
         if (checkzero == 0) {
             buttons[x][y].setVisible(false);
             if (x-1 >= 0)

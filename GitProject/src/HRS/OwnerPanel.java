@@ -5,32 +5,22 @@
  */
 package HRS;
 
-import java.awt.event.KeyEvent;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
-import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
  *
  * @author lhassler
  */
-public class DogPanel extends javax.swing.JPanel {
+public class OwnerPanel extends javax.swing.JPanel {
     
    
 
     /**
      * Creates new form NewJPanel
      */
-    public DogPanel() {
+    public OwnerPanel() {
         initComponents();
-        String[] owners = new String[HRS.hrs.getmOwner().size()];
-        for (int i=0;i<HRS.hrs.getmOwner().size();i++)
-        {
-            owners[i] = HRS.hrs.getmOwner().get(i).getmName();
-        }
-        jComboBoxOwner.setModel(new javax.swing.DefaultComboBoxModel<>(owners));
         UpdateTable();
         
     }
@@ -47,23 +37,19 @@ public class DogPanel extends javax.swing.JPanel {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         jButton1 = new javax.swing.JButton();
-        jTextFieldDogName = new javax.swing.JTextField();
+        jTextFieldOwnerName = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jTextFieldRace = new javax.swing.JTextField();
-        jComboBoxOwner = new javax.swing.JComboBox<>();
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "Name", "Rasse", "Besitzer"
+                "Name"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false
+                false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -71,6 +57,9 @@ public class DogPanel extends javax.swing.JPanel {
             }
         });
         jScrollPane1.setViewportView(jTable1);
+        if (jTable1.getColumnModel().getColumnCount() > 0) {
+            jTable1.getColumnModel().getColumn(0).setResizable(false);
+        }
 
         jButton1.setText("Hinzufügen");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -79,19 +68,7 @@ public class DogPanel extends javax.swing.JPanel {
             }
         });
 
-        jTextFieldDogName.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                jTextFieldDogNameKeyPressed(evt);
-            }
-        });
-
         jLabel1.setText("Name");
-
-        jLabel2.setText("Rasse");
-
-        jLabel3.setText("Besitzer");
-
-        jComboBoxOwner.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -101,15 +78,9 @@ public class DogPanel extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(20, 20, 20)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1)
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel3))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTextFieldRace)
-                            .addComponent(jTextFieldDogName)
-                            .addComponent(jComboBoxOwner, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(jLabel1)
+                        .addGap(21, 21, 21)
+                        .addComponent(jTextFieldOwnerName))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
@@ -124,16 +95,8 @@ public class DogPanel extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(jTextFieldDogName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jTextFieldOwnerName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(jTextFieldRace, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(jComboBoxOwner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 269, Short.MAX_VALUE)
@@ -142,32 +105,15 @@ public class DogPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        boolean gotOwner = false;
         for (Owner owner : HRS.hrs.getmOwner()) {
-            if (owner.getmName().equals((String)jComboBoxOwner.getSelectedItem()))
+            if (owner.getmName().equals(jTextFieldOwnerName.getText()))
             {
-                gotOwner = true;
+                return;
             }
         }
-        
-        if (gotOwner)
-        {
-            HRS.hrs.getmDogs().add(new Dog(jTextFieldDogName.getText(),jTextFieldRace.getText(),new Owner((String)jComboBoxOwner.getSelectedItem())));
-                UpdateTable();
-        }
-        else
-        {
-            JOptionPane.showMessageDialog(null,"kein Besitzer mit diesem namen","Titel", JOptionPane.CANCEL_OPTION);
-        }
+        HRS.hrs.getmOwner().add(new Owner(jTextFieldOwnerName.getText()));
+        UpdateTable();
     }//GEN-LAST:event_jButton1ActionPerformed
-
-    private void jTextFieldDogNameKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldDogNameKeyPressed
-        // TODO add your handling code here:
-        if (evt.getKeyCode() == KeyEvent.VK_ENTER)
-        {
-            jButton1ActionPerformed(null);
-        }
-    }//GEN-LAST:event_jTextFieldDogNameKeyPressed
 
     private void UpdateTable() {
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
@@ -176,8 +122,8 @@ public class DogPanel extends javax.swing.JPanel {
         for (int i = rowCount - 1; i >= 0; i--) {
             model.removeRow(i);
         }
-        for (Dog dog : HRS.hrs.getmDogs()) {
-            model.addRow(new Object[]{dog.getName(), dog.getRace(), dog.getOwner().getmName()});
+        for (Owner owner : HRS.hrs.getmOwner()) {
+            model.addRow(new Object[]{owner.getmName()});
         }
         
         
@@ -187,14 +133,10 @@ public class DogPanel extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
-    private javax.swing.JComboBox<String> jComboBoxOwner;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextFieldDogName;
-    private javax.swing.JTextField jTextFieldRace;
+    private javax.swing.JTextField jTextFieldOwnerName;
     // End of variables declaration//GEN-END:variables
 
 }

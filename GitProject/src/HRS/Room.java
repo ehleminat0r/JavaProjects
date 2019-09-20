@@ -9,8 +9,9 @@ package HRS;
  *
  * @author lhassler
  */
-public class Owner {
+public class Room {
     private String mName;
+    private int mSize;
 
     /**
      * @return the mName
@@ -26,10 +27,24 @@ public class Owner {
         this.mName = mName;
     }
 
-    public Owner(String mName) {
-        this.mName = mName;
+    /**
+     * @return the mSize
+     */
+    public int getmSize() {
+        return mSize;
     }
-    
+
+    /**
+     * @param mSize the mSize to set
+     */
+    public void setmSize(int mSize) {
+        this.mSize = mSize;
+    }
+
+    public Room(String mName, int mSize) {
+        this.mName = mName;
+        this.mSize = mSize;
+    }
     
     
     

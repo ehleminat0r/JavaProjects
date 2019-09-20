@@ -13,7 +13,6 @@ import java.util.Date;
  */
 public class Dog {
     private String mName;
-    private Date mAge;
     private String mRace;
     private Owner mOwner;
 
@@ -31,19 +30,6 @@ public class Dog {
         this.mName = mName;
     }
 
-    /**
-     * @return the mAge
-     */
-    public Date getAge() {
-        return mAge;
-    }
-
-    /**
-     * @param mAge the mAge to set
-     */
-    public void setAge(Date mAge) {
-        this.mAge = mAge;
-    }
 
     /**
      * @return the mRace
@@ -76,11 +62,12 @@ public class Dog {
     public Dog() {
     }
 
-    public Dog(String mName, Date mAge, String mRace) {
+    public Dog(String mName, String mRace, Owner owner) {
         this.mName = mName;
-        this.mAge = mAge;
         this.mRace = mRace;
+        this.mOwner = owner;
     }
+    
     
     
     

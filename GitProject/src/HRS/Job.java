@@ -5,29 +5,29 @@
  */
 package HRS;
 
+import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 
 /**
  *
  * @author lhassler
  */
 public class Job {
-    private GregorianCalendar mDate;
+    private Calendar mDate;
     private Dog mDog;
-    private String mRoom;
+    private Room mRoom;
 
     /**
      * @return the mDate
      */
-    public GregorianCalendar getDate() {
+    public Calendar getDate() {
         return mDate;
     }
 
     /**
      * @param mDate the mDate to set
      */
-    public void setDate(GregorianCalendar mDate) {
+    public void setDate(Calendar mDate) {
         this.mDate = mDate;
     }
 
@@ -48,19 +48,19 @@ public class Job {
     /**
      * @return the mRoom
      */
-    public String getRoom() {
+    public Room getRoom() {
         return mRoom;
     }
 
     /**
      * @param mRoom the mRoom to set
      */
-    public void setRoom(String mRoom) {
+    public void setRoom(Room mRoom) {
         this.mRoom = mRoom;
     }
 
     // Constructor
-    public Job(GregorianCalendar mDate, Dog mDog, String mRoom) {
+    public Job(Calendar mDate, Dog mDog, Room mRoom) {
         this.mDate = mDate;
         this.mDog = mDog;
         this.mRoom = mRoom;
